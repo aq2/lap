@@ -1,0 +1,31 @@
+{
+  "name": "pughar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aq2/pughar.git"
+  },
+  "author": "angelo",
+  "license": "WTF",
+  "bugs": {
+    "url": "https://github.com/aq2/pughar/issues"
+  },
+  "homepage": "https://github.com/aq2/pughar#readme",
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "del": "^5.0.0",
+    "gulp": "^4.0.2",
+    "gulp-notify": "^3.2.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-pug": "^4.0.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-stylus": "^2.7.0"
+  },
+  "dependencies": {}
+}

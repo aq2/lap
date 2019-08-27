@@ -1,0 +1,17 @@
+version: "3.2"
+
+services:
+  lap:
+    container_name: lap
+    build: ./stuff
+    volumes:
+      - ./www:/www
+    ports:
+      - "80:80"
+
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"
+      - "3002:8025"

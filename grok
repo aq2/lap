@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# grok: integrates gulp and docker
+#
+# commands: build, dev, down, nuke, pub, up
+# default: nuke, build, watch, docker-up
+
+
+# set file locations
+LOCAL_SOURCE="./www/"
+DEV="ayurvedi@shell.gridhost.co.uk:~/subdomains/dev/"
+PUB="ayurvedi@shell.gridhost.co.uk:~/public_html/"
+
+
+# sync to server
+function sync() {
+  read -p 'Are you sure? ' -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo 'nope'
+    exit 1
+  fi
+
+  echo 'deploying...'
+  rsync $LOCAL_SOURCE $1 --backup --backup-dir="bak_$(date +\\%Y-\\%m-\\%d)"   \
+    --delete --exclude 'bak*' --human-readable --progress --recursive --verbose
+}
+
+
+# runs after ctrl-c
+function ctrl_c() {
+  echo 'Ctrl-c detected, shutting doon...'
+  docker-compose down
+}
+
+
+# switch on argument
+case "$1" in
+  build)
+    gulp build;;
+  dev)
+    sync $DEV;;
+  dwon)
+    docker-compose down;;
+  down)
+    docker-compose down;;
+  nuke)
+    gulp nuke;;
+  pub)
+    sync $PUB;;
+  up)
+    docker-compose up -d;;
+  db)
+    docker-compose exec db /bin/bash -i;;
+  php)
+    docker-compose exec php /bin/bash -i;;
+  *)
+    docker-compose up -d
+    trap ctrl_c INT
+    gulp
+    ;;
+esac
+

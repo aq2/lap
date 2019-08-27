@@ -1,0 +1,18 @@
+|<?php
+|  session_start();
+|
+|  if (!isset($_SESSION['loggedin'])) {
+|    die("shouldn't be here");
+|  }
+|
+|  // setup initial database
+|  require_once('functions.php');
+|
+|  $connection = new mysqli(localhost, $_SESSION['user'], $_SESSION['password'], aym);
+|  if ($connection->connect_error) die($connection->connect_error);
+|?>
+
+html
+  body
+    p yep <?php echo $_SESSION['name']; ?>
+    // show buttons for view/list studios and workshops
