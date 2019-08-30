@@ -1,12 +1,12 @@
 // main admin page
 // lots going on here, inc AJAX
 
-<?php require_once('functions.php'); checkIfSession(); ?>
+<?php require_once('../php/functions.php'); checkIfSession(); ?>
 
 html
   head
-    script(src='functions.js')
-    link(rel='stylesheet', href='admin.min.css')
+    script(src='../js/functions.js')
+    link(rel='stylesheet', href='../css/admin.min.css')
 
   body
     p <?php echo $_SESSION['name']; ?> logged in
@@ -14,8 +14,8 @@ html
     #ui
       // show buttons for view/list studios and workshops
       script confirmMsg = 'this will wipe the database - you sure you wanna do this?'
-      button(onclick="loadDoc('init_db.php', 'dataDiv', confirmMsg)") init database
-      button(onclick="loadDoc('show_studios.php','dataDiv')") show studios
+      button(onclick="loadDoc('../php/init_db.php', 'dataDiv', confirmMsg)") init database
+      button(onclick="loadDoc('../php/show_studios.php','dataDiv')") show studios
       button add studio
     #dataDiv
       p data will go here

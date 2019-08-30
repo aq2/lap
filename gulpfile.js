@@ -24,7 +24,7 @@ function customPlumber(errTitle) {
 
 function gza() {
   fs.mkdir('www/data', (err) => {if (err) throw err})
-  return gulp.src('./www/index.html')
+  return gulp.src('./www/index.php')
              .pipe(notify('🏠 Gulp building to be born 🏠'))
 }
 exports.gza = gza
@@ -105,14 +105,14 @@ exports.phps = phps
 // exports.adminphps = adminphps
 
 
-// function pugphps() {
-//   return gulp.src('./src/admin/**/*.pug')
-//              .pipe(customPlumber('pugphps'))
-//              .pipe(pug())
-//              .pipe(rename({ extname: '.php' }))
-//              .pipe(gulp.dest('./www/admin'))
-// }
-// exports.pugphps = pugphps
+function pugphps() {
+  return gulp.src('./src/admin/**/*.pug')
+             .pipe(customPlumber('pugphps'))
+             .pipe(pug())
+             .pipe(rename({ extname: '.php' }))
+             .pipe(gulp.dest('./www/admin'))
+}
+exports.pugphps = pugphps
 
 
 function styles() {
@@ -164,7 +164,7 @@ function watchFiles() {
   // gulp.watch('./src/admin/stylus/admin.styl', adminStyles)
   // gulp.watch('./src/admin/admin.styl', gulp.series(adminStyles, reloadBrowser))
   // gulp.watch('./src/admin/**/*.js', gulp.series(adminjs, reloadBrowser))
-  // gulp.watch('./src/admin/**/*.pug', gulp.series(pugphps, reloadBrowser))
+  gulp.watch('./src/admin/**/*.pug', gulp.series(pugphps, reloadBrowser))
   // gulp.watch('./src/admin/**/*.php', gulp.series(adminphps, reloadBrowser))
 
   gulp.watch('./src/php/**/*', gulp.series(phps, reloadBrowser))
@@ -184,7 +184,7 @@ const build = gulp.series(
   nuke,
   includes,
   // gulp.parallel(index, pages, js, phps, images, styles, pugphps, adminphps),
-  gulp.parallel(index, pages, js, phps, images, styles),
+  gulp.parallel(index, pages, js, phps, images, styles, pugphps),
   // gulp.parallel(index, pages, js, phps, images, pugphps, adminphps, adminjs, adminStyles),
   gza
 )

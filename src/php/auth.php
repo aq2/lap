@@ -1,6 +1,6 @@
 <?php
 
-require_once('./../php/validators.php');
+require_once('validators.php');
 require_once('functions.php');
 
 // process form to check password
@@ -21,7 +21,7 @@ if ( ($form_password == $ini['password1'])
   $_SESSION['password'] = $form_password;
   $_SESSION['loggedin'] = true;
 
-  echo "<meta http-equiv='refresh' content='0; URL=admin.php'>";
+  echo "<meta http-equiv='refresh' content='0; URL=../admin/admin.php'>";
   exit;
 
 } else {
