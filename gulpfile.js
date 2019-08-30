@@ -1,4 +1,5 @@
-const del = require('del'),
+const fs = require('fs'),
+      del = require('del'),
       gulp = require('gulp'),
       pug  = require('gulp-pug'),
       rename = require('gulp-rename'),
@@ -22,6 +23,7 @@ function customPlumber(errTitle) {
 
 
 function gza() {
+  fs.mkdir('www/data', (err) => {if (err) throw err})
   return gulp.src('./www/index.html')
              .pipe(notify('🏠 Gulp building to be born 🏠'))
 }
@@ -47,9 +49,11 @@ function index() {
   return gulp.src('./src/index.pug')
              .pipe(pug())
              .pipe(customPlumber('index'))
+             .pipe(rename({ extname: '.php' }))
              .pipe(gulp.dest('./www'))
 }
 exports.index = index
+
 
 
 function js() {
@@ -58,6 +62,13 @@ function js() {
              .pipe(gulp.dest('./www/js'))
 }
 exports.js = js
+
+// function adminjs() {
+//   return gulp.src('./src/admin/**/*.js')
+//              .pipe(customPlumber('javascript'))
+//              .pipe(gulp.dest('./www/admin'))
+// }
+// exports.adminjs = adminjs
 
 
 function nuke() {
@@ -86,40 +97,53 @@ function phps() {
 exports.phps = phps
 
 
-function adminphps() {
-  return gulp.src('./src/admin/**/*.php')
-             .pipe(customPlumber('php'))
-             .pipe(gulp.dest('./www/admin'))
+// function adminphps() {
+//   return gulp.src('./src/admin/**/*.php')
+//              .pipe(customPlumber('php'))
+//              .pipe(gulp.dest('./www/admin'))
+// }
+// exports.adminphps = adminphps
+
+
+// function pugphps() {
+//   return gulp.src('./src/admin/**/*.pug')
+//              .pipe(customPlumber('pugphps'))
+//              .pipe(pug())
+//              .pipe(rename({ extname: '.php' }))
+//              .pipe(gulp.dest('./www/admin'))
+// }
+// exports.pugphps = pugphps
+
+
+function styles() {
+  return gulp.src('./src/stylus/main.styl')
+             .pipe(sourcemaps.init())
+             .pipe(stylus({ compress: true }))
+             .pipe(customPlumber('stylus'))
+             .pipe(rename({ suffix: '.min' }))
+             .pipe(sourcemaps.write('./'))
+             .pipe(gulp.dest('./www/css'))
+             .pipe(browsersync.stream())
 }
-exports.adminphps = adminphps
+exports.styles = styles
 
-
-function pugphps() {
-  return gulp.src('./src/admin/**/*.pug')
-             .pipe(customPlumber('pugphps'))
-             .pipe(pug())
-             .pipe(rename({ extname: '.php' }))
-             .pipe(gulp.dest('./www/admin'))
-}
-exports.pugphps = pugphps
-
-
-// function styles() {
-//   return gulp.src('./src/stylus/main.styl')
+// function adminStyles() {
+//   return gulp.src('./src/admin/admin.styl')
 //              .pipe(sourcemaps.init())
 //              .pipe(stylus({ compress: true }))
 //              .pipe(customPlumber('stylus'))
 //              .pipe(rename({ suffix: '.min' }))
 //              .pipe(sourcemaps.write('./'))
-//              .pipe(gulp.dest('./www/css'))
+//              .pipe(gulp.dest('./www/admin'))
 //              .pipe(browsersync.stream())
 // }
-// exports.styles = styles
+// exports.adminStyles = adminStyles
+
 
 
 function syncBrowser() {
   browsersync.init({
-    proxy: 'localhost:3000',
+    proxy: 'localhost:80',
     open: false
   })
 }
@@ -135,10 +159,13 @@ exports.reloadBrowser = reloadBrowser
 
 function watchFiles() {
   // gulp.watch('./src/images/**/*.*', images)
-  // gulp.watch('./src/stylus/**/*.styl', styles)
+  gulp.watch('./src/stylus/**/*.styl', styles)
 
-  gulp.watch('./src/admin/**/*.pug', gulp.series(pugphps, reloadBrowser))
-  gulp.watch('./src/admin/**/*.php', gulp.series(adminphps, reloadBrowser))
+  // gulp.watch('./src/admin/stylus/admin.styl', adminStyles)
+  // gulp.watch('./src/admin/admin.styl', gulp.series(adminStyles, reloadBrowser))
+  // gulp.watch('./src/admin/**/*.js', gulp.series(adminjs, reloadBrowser))
+  // gulp.watch('./src/admin/**/*.pug', gulp.series(pugphps, reloadBrowser))
+  // gulp.watch('./src/admin/**/*.php', gulp.series(adminphps, reloadBrowser))
 
   gulp.watch('./src/php/**/*', gulp.series(phps, reloadBrowser))
   gulp.watch('./src/js/**/*.js', gulp.series(js, reloadBrowser))
@@ -157,7 +184,8 @@ const build = gulp.series(
   nuke,
   includes,
   // gulp.parallel(index, pages, js, phps, images, styles, pugphps, adminphps),
-  gulp.parallel(index, pages, js, phps, images, pugphps, adminphps),
+  gulp.parallel(index, pages, js, phps, images, styles),
+  // gulp.parallel(index, pages, js, phps, images, pugphps, adminphps, adminjs, adminStyles),
   gza
 )
 exports.build = build

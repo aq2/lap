@@ -9,7 +9,7 @@
 # set file locations
 LOCAL_SOURCE="./www/"
 DEV="ayurvedi@shell.gridhost.co.uk:~/subdomains/dev/"
-PUB="ayurvedi@shell.gridhost.co.uk:~/public_html/"
+# PUB="ayurvedi@shell.gridhost.co.uk:~/public_html/"
 
 
 # sync to server

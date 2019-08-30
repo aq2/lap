@@ -10,14 +10,17 @@ RUN apk add --no-cache \
     php7 \
     php7-dom \
     php7-fpm \
+    php7-pdo \
     php7-xml \
     php7-json \
     php7-ctype \
     php7-common \
-    php7-openssl \
     php7-opcache \
+    php7-openssl \
     php7-session \
+    php7-sqlite3 \
     php7-mbstring \
+    php7-pdo_sqlite \
     && mkdir /www \
     && mkdir /run/apache2 \
     && rm -rf /etc/init.d/* \

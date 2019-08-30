@@ -1,18 +1,26 @@
-|<?php
-|  session_start();
-|
-|  if (!isset($_SESSION['loggedin'])) {
-|    die("shouldn't be here");
-|  }
-|
-|  // setup initial database
-|  require_once('functions.php');
-|
-|  $connection = new mysqli(localhost, $_SESSION['user'], $_SESSION['password'], aym);
-|  if ($connection->connect_error) die($connection->connect_error);
-|?>
+// main admin page
+// lots going on here, inc AJAX
+
+<?php require_once('functions.php'); checkIfSession(); ?>
 
 html
+  head
+    script(src='functions.js')
+    link(rel='stylesheet', href='admin.min.css')
+
   body
-    p yep <?php echo $_SESSION['name']; ?>
-    // show buttons for view/list studios and workshops
+    p <?php echo $_SESSION['name']; ?> logged in
+
+    #ui
+      // show buttons for view/list studios and workshops
+      script confirmMsg = 'this will wipe the database - you sure you wanna do this?'
+      button(onclick="loadDoc('init_db.php', 'dataDiv', confirmMsg)") init database
+      button(onclick="loadDoc('show_studios.php','dataDiv')") show studios
+      button add studio
+    #dataDiv
+      p data will go here
+    #messages
+      p messagios
+
+
+
