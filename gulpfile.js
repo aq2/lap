@@ -167,7 +167,7 @@ function watchFiles() {
   gulp.watch('./src/admin/**/*.pug', gulp.series(pugphps, reloadBrowser))
   // gulp.watch('./src/admin/**/*.php', gulp.series(adminphps, reloadBrowser))
 
-  gulp.watch('./src/php/**/*', gulp.series(phps, reloadBrowser))
+  gulp.watch('./src/php/**/*.php', gulp.series(phps, reloadBrowser))
   gulp.watch('./src/js/**/*.js', gulp.series(js, reloadBrowser))
   gulp.watch('./src/index.pug', gulp.series(index, reloadBrowser))
   gulp.watch('./src/pages/**/*.pug', gulp.series(pages, reloadBrowser))

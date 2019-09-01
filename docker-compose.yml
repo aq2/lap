@@ -9,9 +9,10 @@ services:
     ports:
       - "80:80"
 
-  mailhog:
-    container_name: mailhog
-    image: mailhog/mailhog:latest
-    ports:
-      - "1025:1025"
-      - "3002:8025"
+
+  # mailhog:
+  #   container_name: mailhog
+  #   image: mailhog/mailhog:latest
+  #   ports:
+  #     - "1025:1025"
+  #     - "3002:8025"

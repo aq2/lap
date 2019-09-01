@@ -6,20 +6,22 @@
 html
   head
     script(src='../js/functions.js')
-    link(rel='stylesheet', href='../css/admin.min.css')
+    link(rel='stylesheet', href='../css/main.min.css')
 
   body
-    p <?php echo $_SESSION['name']; ?> logged in
+    p <?= $_SESSION['name']; ?> logged in
 
-    #ui
+    #adUi
       // show buttons for view/list studios and workshops
-      script confirmMsg = 'this will wipe the database - you sure you wanna do this?'
-      button(onclick="loadDoc('../php/init_db.php', 'dataDiv', confirmMsg)") init database
-      button(onclick="loadDoc('../php/show_studios.php','dataDiv')") show studios
+      script const wipeWarning = 'this will wipe the database - you sure you wanna do this?'
+      button(onclick="loadDoc('../php/init_db.php', 'adDataDiv', wipeWarning)") init database
+      button(onclick="loadDoc('../php/show_studios.php','adDataDiv')") show studios
       button add studio
-    #dataDiv
+
+    #adDataDiv
       p data will go here
-    #messages
+
+    #adMessages
       p messagios
 
 
