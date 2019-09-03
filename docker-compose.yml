@@ -6,6 +6,7 @@ services:
     build: ./stuff
     volumes:
       - ./www:/www
+      - ./data:/data
     ports:
       - "80:80"
 

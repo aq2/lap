@@ -1,0 +1,17 @@
+// main admin page
+// lots going on here
+
+<?php require_once('php/functions.php'); ?>
+
+html
+  head
+    script(src='js/functions.js')
+    link(rel='stylesheet', href='main.min.css')
+
+  body
+    <?php require_once('php/buttons.inc.php'); ?>
+
+    p eventually show tables in here
+
+
+

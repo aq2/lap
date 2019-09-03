@@ -2,11 +2,12 @@
 // bunch of useful functions worth requiring for admin stuff
 
 
-function getDB($db_file = '../data/aym.sqlite') {
+function getDB($db_file = '../../data/aym.sqlite') {
   # try to return the database, default is aym.sqlite
   try {
     $db = new PDO('sqlite:' . $db_file);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ); // or FETCH ASSOC, can override
     return $db;
   } catch(PDOException $ex) {
     echo $ex->getMessage();
@@ -17,34 +18,6 @@ function getDB($db_file = '../data/aym.sqlite') {
 function newLines($n = 1) {
   for ($i=0; $i<=$n; $i++) {
     echo '<br>';
-  }
-}
-
-
-function checkIfSession() {
-  session_start();
-  if (!isset($_SESSION['loggedin'])) {
-    die("shouldn't be here");
-  }
-}
-
-function destroy_session_and_data() {
-  session_start();
-  $_SESSION = array();
-  setcookie(session_name(), '', time() - (60 * 60 * 24), '/');
-  session_destroy();
-}
-
-// do a sqlite query, and report back
-function squery($sql, $action) {
-  $db = new SQLite3('../data/aym.sqlite');
-
-  if ($db) {
-    $db->query($sql);
-    echo "$action OK <br>";
-    // call js function?
-  } else {
-    echo "$action nope! <br>";
   }
 }
 
@@ -61,5 +34,12 @@ function assoc2kv($assoc) {
 }
 
 
+// returns database table names as an array
+function getTableNames() {
+  $db = getDB();
+  $sql = "SELECT * FROM sqlite_master WHERE type='table';";
+  $tables = $db->query($sql);
 
+  return $tables;
+}
 ?>

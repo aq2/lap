@@ -2,6 +2,11 @@
 
 // require_once('functions.php'); # NOT needed, require it in code that uses class
 
+
+// constructor 'gets' $columns, $rows
+// this->createNew($data) to initiate and populate
+
+
 class Table {
   public $name;
   public $rows;

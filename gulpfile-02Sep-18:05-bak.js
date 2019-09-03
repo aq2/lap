@@ -1,4 +1,5 @@
-const del = require('del'),
+const fs = require('fs'),
+      del = require('del'),
       gulp = require('gulp'),
       pug  = require('gulp-pug'),
       rename = require('gulp-rename'),
@@ -22,6 +23,7 @@ function customPlumber(errTitle) {
 
 
 function gza() {
+  fs.mkdir('www/data', (err) => {if (err) throw err})
   return gulp.src('./www/index.php')
              .pipe(notify('🏠 Gulp building to be born 🏠'))
 }
@@ -29,8 +31,8 @@ exports.gza = gza
 
 
 function images() {
-  return gulp.src('src/images/**/*.*')
-             .pipe(gulp.dest('www/images'))
+  return gulp.src('./src/images/**/*.*')
+             .pipe(gulp.dest('./www/images'))
 }
 exports.images = images
 
@@ -44,28 +46,36 @@ exports.includes = includes
 
 
 function index() {
-  return gulp.src('src/index.pug')
+  return gulp.src('./src/index.pug')
              .pipe(pug())
              .pipe(customPlumber('index'))
              .pipe(rename({ extname: '.php' }))
-             .pipe(gulp.dest('www'))
+             .pipe(gulp.dest('./www'))
 }
 exports.index = index
 
 
 
 function js() {
-  return gulp.src('src/js/**/*.js')
+  return gulp.src('./src/js/**/*.js')
              .pipe(customPlumber('javascript'))
-             .pipe(gulp.dest('www/js'))
+             .pipe(gulp.dest('./www/js'))
 }
 exports.js = js
 
+// function adminjs() {
+//   return gulp.src('./src/admin/**/*.js')
+//              .pipe(customPlumber('javascript'))
+//              .pipe(gulp.dest('./www/admin'))
+// }
+// exports.adminjs = adminjs
+
+
 function nuke() {
-  gulp.src('src')
+  gulp.src('./src')
       .pipe(notify('😱 Gulp nuke and pave 😱'))
   exec('espeak -ven+f5 nuke')
-  return del('www/**/*')
+  return del('./www/**/*')
 }
 exports.nuke = nuke
 
@@ -74,7 +84,7 @@ function pages() {
   return gulp.src('src/pages/**/*.pug')
              .pipe(customPlumber('pages'))
              .pipe(pug())
-             .pipe(gulp.dest('www/pages'))
+             .pipe(gulp.dest('./www/pages'))
 }
 exports.pages = pages
 
@@ -82,32 +92,53 @@ exports.pages = pages
 function phps() {
   return gulp.src('./src/php/**/*')
              .pipe(customPlumber('php'))
-             .pipe(gulp.dest('www/php'))
+             .pipe(gulp.dest('./www/php'))
 }
 exports.phps = phps
 
 
-function pups() {
-  return gulp.src('./src/**/*.pup')
-             .pipe(customPlumber('pups'))
+// function adminphps() {
+//   return gulp.src('./src/admin/**/*.php')
+//              .pipe(customPlumber('php'))
+//              .pipe(gulp.dest('./www/admin'))
+// }
+// exports.adminphps = adminphps
+
+
+function pugphps() {
+  return gulp.src('./src/admin/**/*.pug')
+             .pipe(customPlumber('pugphps'))
              .pipe(pug())
              .pipe(rename({ extname: '.php' }))
-             .pipe(gulp.dest('www'))
+             .pipe(gulp.dest('./www/admin'))
 }
-exports.pups = pups
+exports.pugphps = pugphps
 
 
 function styles() {
-  return gulp.src('src/stylus/main.styl')
+  return gulp.src('./src/stylus/main.styl')
              .pipe(sourcemaps.init())
              .pipe(stylus({ compress: true }))
              .pipe(customPlumber('stylus'))
              .pipe(rename({ suffix: '.min' }))
              .pipe(sourcemaps.write('./'))
-             .pipe(gulp.dest('./www'))
+             .pipe(gulp.dest('./www/css'))
              .pipe(browsersync.stream())
 }
 exports.styles = styles
+
+// function adminStyles() {
+//   return gulp.src('./src/admin/admin.styl')
+//              .pipe(sourcemaps.init())
+//              .pipe(stylus({ compress: true }))
+//              .pipe(customPlumber('stylus'))
+//              .pipe(rename({ suffix: '.min' }))
+//              .pipe(sourcemaps.write('./'))
+//              .pipe(gulp.dest('./www/admin'))
+//              .pipe(browsersync.stream())
+// }
+// exports.adminStyles = adminStyles
+
 
 
 function syncBrowser() {
@@ -126,14 +157,31 @@ function reloadBrowser(done) {
 exports.reloadBrowser = reloadBrowser
 
 
+// function newWatch() {
+//   gulp.watch('./src/admin/**/*.pug', { events: 'changed' }, gulp.series(pugphps, reloadBrowser));
+// }
+// exports.newWatch = newWatch
+
+newWatch = function() {
+  // All events will be watched
+  gulp.watch('./src/admin/**/*.pug', { events: 'all' }, function(cb) {
+    gulp.series(pugphps, reloadBrowser)
+    cb()
+  })
+}
+
 function watchFiles() {
   // gulp.watch('./src/images/**/*.*', images)
   gulp.watch('./src/stylus/**/*.styl', styles)
-  gulp.watch('./src/js/**/*.js', gulp.series(js, reloadBrowser))
-  gulp.watch('./src/php/**/*.php', phps)
-  // gulp.watch('./src/php/**/*.php', gulp.series(phps, reloadBrowser))
 
-  gulp.watch('./src/**/*.pup', gulp.series(pups))
+  // gulp.watch('./src/admin/stylus/admin.styl', adminStyles)
+  // gulp.watch('./src/admin/admin.styl', gulp.series(adminStyles, reloadBrowser))
+  // gulp.watch('./src/admin/**/*.js', gulp.series(adminjs, reloadBrowser))
+  gulp.watch('./src/admin/**/*.pug', gulp.series(pugphps, reloadBrowser))
+  // gulp.watch('./src/admin/**/*.php', gulp.series(adminphps, reloadBrowser))
+
+  gulp.watch('./src/php/**/*.php', gulp.series(phps, reloadBrowser))
+  gulp.watch('./src/js/**/*.js', gulp.series(js, reloadBrowser))
   gulp.watch('./src/index.pug', gulp.series(index, reloadBrowser))
   gulp.watch('./src/pages/**/*.pug', gulp.series(pages, reloadBrowser))
   gulp.watch('./src/includes/**/*.pug', gulp.series(includes, gulp.parallel(pages, index), reloadBrowser))
@@ -148,14 +196,16 @@ exports.watchFiles = watchFiles
 const build = gulp.series(
   nuke,
   includes,
-  gulp.parallel(index, pages, js, phps, images, styles, pups),
+  // gulp.parallel(index, pages, js, phps, images, styles, pugphps, adminphps),
+  gulp.parallel(index, pages, js, phps, images, styles, pugphps),
+  // gulp.parallel(index, pages, js, phps, images, pugphps, adminphps, adminjs, adminStyles),
   gza
 )
 exports.build = build
 
-
-const watch = gulp.parallel(watchFiles, syncBrowser)
+const watch = gulp.parallel(newWatch, syncBrowser)
+// const watch = gulp.parallel(watchFiles, syncBrowser)
 exports.watch = watch
 
-
 exports.default = gulp.series(build, watch)
+
