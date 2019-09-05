@@ -1,17 +1,14 @@
 // main admin page
-// lots going on here
 
-<?php require_once('php/functions.php'); ?>
 
 html
   head
-    script(src='js/functions.js')
-    link(rel='stylesheet', href='main.min.css')
+    // script(src='js/functions.js')
 
   body
-    <?php require_once('php/buttons.inc.php'); ?>
+    <?php require_once('php/admin_buttons.php'); ?>
 
-    p eventually show tables in here
+    p eventually show tables metadata in here
 
 
 

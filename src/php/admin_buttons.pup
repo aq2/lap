@@ -1,0 +1,20 @@
+// button view and controller
+
+link(rel='stylesheet', href='../main.min.css')
+
+#ad_buttons
+  #ad_show
+    span.
+      <?php
+        require_once('db_functions.php');
+        $tables = getTableNames();
+        foreach ($tables as $table) {
+          echo "<a href='/php/showTable_view.php?table={$table}'><button>{$table}</button></a>";
+        }
+      ?>
+
+  #ad_init
+    a(href='/php/init_db.php')
+      button init database
+
+
