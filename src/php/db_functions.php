@@ -31,6 +31,8 @@ function squery($sql, $paramsArray=[]) {
   $stmt = $db->prepare($sql);
   $stmt->execute($paramsArray);
   $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $db = null;
+  $stmt = null;
   return $results;
 }
 
@@ -56,7 +58,7 @@ function getTable($tableName) {
 
 
 // my 'debuggers'
-function gecho($desc, $var) {
+function gecho($desc, $var='') {
   echo "<br>{$desc}: {$var}<br>";
 }
 // for arrays and objects
@@ -66,5 +68,3 @@ function recho($desc, $arr) {
   echo "<br></pre>";
 }
 
-
-?>
