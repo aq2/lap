@@ -1,4 +1,4 @@
-<?php
+<?php    # useful database functions - could wrap them into an object?
 
 // try to return the database, default is aym.sqlite
 function getDB($db_file = '../../data/aym.sqlite') {
@@ -26,17 +26,23 @@ function getTableNames() {
 }
 
 
+// executes raw $sql, or prepared paramateredised statement
+// TODO add try/catch to distinguish between getDB() and sql errors?
+// returns results of query for SELECT's
 function squery($sql, $paramsArray=[]) {
   $db = getDB();
   $stmt = $db->prepare($sql);
-  $stmt->execute($paramsArray);
+  $stmt->execute($paramsArray);   # try/catch this?
   $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  // don't need these objects anymore, clear them
   $db = null;
   $stmt = null;
   return $results;
 }
 
 
+// returns contents of db table as $table->$rows and $cols
 function getTable($tableName) {
   $cols = array();
   $records = array();
@@ -47,14 +53,12 @@ function getTable($tableName) {
     foreach ($results as $row) {
       $rows[] = array_values($row);
     }
-    $cols = array_keys($results[0]);
+    $cols = array_keys($results[0]);  # only need to do this once, not in foreach
   }
 
   $table = array('rows' => $rows, 'cols' => $cols);
   return $table;
 }
-
-
 
 
 // my 'debuggers'
