@@ -1,15 +1,19 @@
 // button view and controller
 
+php.
+  <?php
+    require_once('db_functions.php');
+    $tables = getTableNames('studios');
+  ?>
+
 link(rel='stylesheet', href='../main.min.css')
 
 #ad_buttons
   #ad_show
-    span.
-      <?php
-        require_once('db_functions.php');
-        $tables = getTableNames();
+    php.
+      <?php     // show button for each table linking to view
         foreach ($tables as $table) {
-          echo "<a href='/php/showTable_view.php?table={$table}'><button>{$table}</button></a>";
+          echo "<a href='/php/show_{$table}_view.php'><button>{$table}</button></a>";
         }
       ?>
 
@@ -18,3 +22,4 @@ link(rel='stylesheet', href='../main.min.css')
       button init database
 
 
+          // echo "<a href='/php/showTable_view.php?table={$table}'><button>{$table}</button></a>";

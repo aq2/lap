@@ -74,6 +74,7 @@ function initTable($name, $columns, $schema, $records) {
 
   $column_str = "'" . join("', '", $columns) . "'";   # oh, really??
 
+  // TODO replace ? with column name?
   $sql = "INSERT INTO $name ({$column_str}) VALUES (?";
   for ($i=0; $i<$num_cols-2; $i++) {
     $sql .= ",?";

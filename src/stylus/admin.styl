@@ -2,11 +2,28 @@ body
   background #666
   margin 1em
 
+
+table.show
+  table-layout fixed
+  width 90%
+  border 1px solid black
+  border-collapse collapse
+  margin 0 auto
+
+  td, th
+    border 1px solid black
+
+  tr:nth-child(odd)
+    background #777
+
+
+
 #ad_buttons
   display flex
   background #333
   justify-content space-between
   width 100%
+  margin-bottom 2em
 
 #ad_init
   background red
@@ -14,4 +31,8 @@ body
 
 #ad_show
   background blue
-  // min-width 600px
+
+.mapRef
+  width 10%
+  overflow hidden
+  text-overflow ellipsis

@@ -5,7 +5,7 @@ function getDB($db_file = '../../data/aym.sqlite') {
   try {
     $db = new PDO('sqlite:' . $db_file);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ); # or FETCH ASSOC, can override
+    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); # or FETCH ASSOC, can override
     return $db;
   } catch(PDOException $ex) {
     echo $ex->getMessage();
@@ -14,51 +14,45 @@ function getDB($db_file = '../../data/aym.sqlite') {
 }
 
 
-// returns $results from an $sql query
-function squery($sql) {
-  $db = getDB();
-  $results = $db->query($sql);
-  $db = null;
-  return $results;
-}
-
-
-# TODO these functions look very similar!
-
 // returns database table names as an array
 function getTableNames() {
   $tables = array();
   $sql = "SELECT * FROM sqlite_master WHERE type='table'";
   $results = squery($sql);
-  while ($row = $results->fetch()) {
-    $tables[] = $row->name;    # array_push($tables, $table_name)
+  foreach ($results as $tbl) {
+    $tables[]  = $tbl['name'];
   }
   return $tables;
 }
 
 
-// returns array of column names
-function getColumnNames($tableName) {
-  $cols = array();
-  $sql = "PRAGMA table_info({$tableName})";
-  $results = squery($sql);
-  while ($row = $results->fetch()) {
-    $cols[] = $row->name;
-  }
-  return $cols;
+function squery($sql, $paramsArray=[]) {
+  $db = getDB();
+  $stmt = $db->prepare($sql);
+  $stmt->execute($paramsArray);
+  $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  return $results;
 }
 
 
-// return $records array of table rows
-function getRecords($tableName) {
+function getTable($tableName) {
+  $cols = array();
   $records = array();
   $sql = "SELECT * FROM {$tableName}";
   $results = squery($sql);
-  while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
-    $records[] = array_values($row);
+
+  if (!empty($results)) {
+    foreach ($results as $row) {
+      $rows[] = array_values($row);
+    }
+    $cols = array_keys($results[0]);
   }
-  return $records;
+
+  $table = array('rows' => $rows, 'cols' => $cols);
+  return $table;
 }
+
+
 
 
 // my 'debuggers'
