@@ -44,13 +44,16 @@
           $j++;
         }
       ?>
-      <tr>
+      <tr class='input'>
         <td></td>
         <td><input type='text' name='st_name'></td>
         <td><input type='text' name='st_address'></td>
         <td><input type='text' name='st_mapRef'></td>
-        <td><input type='submit' name='cancel' value='cancel'></td>
-        <td><input type='submit' name='submit' value='add'></td>
+        <td>
+          <input type='submit' name='cancel' value='cancel'>
+          <input type='submit' name='submit' value='add'>
+        </td>
+      </tr>
     </tbody>
   </table>
 </form>
