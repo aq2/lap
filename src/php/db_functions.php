@@ -61,6 +61,14 @@ function getTable($tableName) {
 }
 
 
+// need new fns here that call squery
+// addRecord($table, [$prepd statement data])
+// deleteRecord($table, $id)
+// moar() - specialised for each table, stick it controller
+// cancelAdd() - not really a db function, more a shared controller fn
+
+
+
 // my 'debuggers'
 function gecho($desc, $var='') {
   echo "<br>{$desc}: {$var}<br>";
