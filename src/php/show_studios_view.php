@@ -26,33 +26,31 @@
     </thead>
     <tbody>
       <?php
+        $j = 1;   # refers to row number - ie id
         foreach ($rows as $row) {
           $i = 0;
-          $j = 1;   # refers to row number - ie id
           echo "<tr>";
           foreach ($row as $datum) {
-            // $tag = 'td';
-            // if ($i == 0) {$tag = 'th';}
             $tag = ($i==0 ? 'th':'td');   # id column should be a th -> uneditable
             echo "<{$tag} class='{$cols[$i]}'>{$datum}</{$tag}>";
-            $i++;
+            $i++;   # move onto next cell
           }
-          echo "<td class='but'>";
+          echo "<th class='but'>";
           echo "<input type='submit' value='delete' name='delete{$j}'>";
           echo "<input type='submit' value='moar' name='moar{$j}'>";
-          echo "</td></tr>";
-          $j++;
+          echo "</th></tr>";
+          $j++;   # move on to next row
         }
+        echo "<tr class='input'>";
+        echo "<th>{$j}</th>";
       ?>
-      <tr class='input'>
-        <td></td>
-        <td><input type='text' name='st_name'></td>
-        <td><input type='text' name='st_address'></td>
-        <td><input type='text' name='st_mapRef'></td>
-        <td>
+        <th><input type='text' name='st_name' required placeholder='add new studio...'></th>
+        <th><input type='text' name='st_address' required></th>
+        <th><input type='text' name='st_mapRef' required></th>
+        <th>
           <input type='submit' name='cancel' value='cancel'>
           <input type='submit' name='submit' value='add'>
-        </td>
+        </th>
       </tr>
     </tbody>
   </table>
