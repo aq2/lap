@@ -31,7 +31,10 @@
           $j = 1;   # refers to row number - ie id
           echo "<tr>";
           foreach ($row as $datum) {
-            echo "<td class='{$cols[$i]}'>{$datum}</td>";
+            // $tag = 'td';
+            // if ($i == 0) {$tag = 'th';}
+            $tag = ($i==0 ? 'th':'td');   # id column should be a th -> uneditable
+            echo "<{$tag} class='{$cols[$i]}'>{$datum}</{$tag}>";
             $i++;
           }
           echo "<td class='but'>";
@@ -41,6 +44,13 @@
           $j++;
         }
       ?>
+      <tr>
+        <td></td>
+        <td><input type='text' name='st_name'></td>
+        <td><input type='text' name='st_address'></td>
+        <td><input type='text' name='st_mapRef'></td>
+        <td><input type='submit' name='cancel' value='cancel'></td>
+        <td><input type='submit' name='submit' value='add'></td>
     </tbody>
   </table>
 </form>
