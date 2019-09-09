@@ -1,7 +1,8 @@
 <?php
   require_once('db_functions.php');
 
-  $table = getTable('studios');
+  $tableName = $_POST['tableName'];
+  $table = getTable($tableName);
   $cols = $table['cols'];
   $rows = $table['rows'];
 ?>
@@ -16,7 +17,7 @@
     <tr>
       <?php
         foreach ($cols as $col) {
-          echo "<th class='{$col}'>{$col}</th>";
+          echo "<th>{$col}</th>";
         }
       ?>
       <th>action</th>
@@ -30,14 +31,12 @@
           echo "<tr>";
           foreach ($row as $datum) {
             $tag = ($i==0 ? 'th':'td');   # id column should be a th -> uneditable
-            echo "<{$tag} class='{$cols[$i]}' id='r{$j}c{$i}'>{$datum}</{$tag}>";
+            echo "<{$tag} class='cell' id='r{$j}c{$i}'>{$datum}</{$tag}>";
             $i++;   # move onto next cell
           }
-          echo "<th class='but'>";
-          echo "<button class='delete' id='del{$j}'>delete</button>";
-          echo "<button class='moar' id='moar{$j}'>moar</button>";
-          // echo "<input type='submit' value='delete' name='delete{$j}'>";
-          // echo "<input type='submit' value='moar' name='moar{$j}'>";
+          echo "<th>";
+          echo "<button id='del{$j}'>delete</button>";
+          echo "<button id='moar{$j}'>moar</button>";
           echo "</th></tr>";
           $j++;   # move on to next row
         }
@@ -54,5 +53,4 @@
     </tr>
   </tbody>
 </table>
-
 

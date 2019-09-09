@@ -22,7 +22,11 @@ php.
 
 script.
   setClickHandler('#initBtn', 'init_db.php', '#showDiv')
-  setClickHandler('#studiosBtn', 'show_studios_view.php', '#showDiv')
+
+  $('#studiosBtn').click( () => {
+    $('#showDiv').post('/php/table_view', { tableName: 'studios' }, () =>{} )
+  })
+
 
   // when button clicked, load url into div
   function setClickHandler(button, url, div) {
