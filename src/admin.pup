@@ -4,11 +4,14 @@
 html
   head
     // script(src='js/functions.js')
+    link(rel='stylesheet', href='/main.min.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js')
 
   body
     <?php require_once('php/admin_buttons.php'); ?>
 
-    p eventually show tables metadata in here
+    #showDiv
+      p eventually show tables metadata in here
 
 
 

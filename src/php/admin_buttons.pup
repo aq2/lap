@@ -6,18 +6,28 @@ php.
     $tables = getTableNames('studios');
   ?>
 
-link(rel='stylesheet', href='../main.min.css')
 
 #ad_buttons
-  #ad_show
+  #show_buttons
     php.
-      <?php     // show button for each table linking to its view page
+      <?php     // show button for each table
         foreach ($tables as $table) {
-          echo "<a href='/php/show_{$table}_view.php'><button>{$table}</button></a>";
+          echo "<button id='{$table}Btn'>{$table}</button>";
         }
       ?>
 
-  #ad_init
-    a(href='/php/init_db.php')
-      button init database
+  #init_button
+    button(id='initBtn') init database
+
+
+script.
+  setClickHandler('#initBtn', 'init_db.php', '#showDiv')
+  setClickHandler('#studiosBtn', 'show_studios_view.php', '#showDiv')
+
+  // when button clicked, load url into div
+  function setClickHandler(button, url, div) {
+    $(button).click( () => {
+      $(div).load('/php/' + url)
+    })
+  }
 

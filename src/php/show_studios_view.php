@@ -1,6 +1,6 @@
 <?php
   require_once('db_functions.php');
-  require_once('admin_buttons.php');
+  // require_once('admin_buttons.php');
 
   $table = getTable('studios');
   $cols = $table['cols'];

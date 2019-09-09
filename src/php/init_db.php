@@ -1,7 +1,6 @@
 <?php
 
 require_once('db_functions.php');
-require_once('admin_buttons.php');
 
 // delete db if already exists, getDB() will create it when needed
 $db_file = '../../data/aym.sqlite';
