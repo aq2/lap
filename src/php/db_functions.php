@@ -33,10 +33,9 @@ function squery($sql, $paramsArray=[]) {
   $db = getDB();
   $stmt = $db->prepare($sql);
   $stmt->execute($paramsArray);   # try/catch this?
-  $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $results = $stmt->fetchAll();
 
-  // don't need these objects anymore, clear them
-  $db = null;
+  $db = null;   # don't need objects anymore, clear them
   $stmt = null;
   return $results;
 }

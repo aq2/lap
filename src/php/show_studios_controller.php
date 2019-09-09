@@ -2,6 +2,7 @@
 
 require_once('db_functions.php');
 
+print_r($_GET);  // for all GET variables
 
 // needs to respond to GET requests
 
