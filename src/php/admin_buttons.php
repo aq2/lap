@@ -2,15 +2,14 @@
 
 require_once('db_functions.php');
 $tables = getTableNames();
-
+// echo "<script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>";
 ?>
-
 
 <div id='adBtnsDiv'>
   <div id='showBtnsDiv'>
     <?php     # show button for each table
       foreach ($tables as $table) {
-        echo "<button id='{$table}Btn'>{$table}</button>";
+        echo "<button id='{$table}Btn')'>{$table}</button>";
       }
     ?>
   </div>
@@ -21,11 +20,10 @@ $tables = getTableNames();
 
 
 <script>
-
 setClickHandler('#initBtn', 'init_db.php', '#showDiv')
 
 $('#studiosBtn').click( () => {
-  $('#showDiv').post('/php/table_view', { tableName: 'studios' }, () =>{} )
+  $.post('/php/table_view', { tableName: 'studios' })
 })
 
 // when button clicked, load url into div
@@ -34,6 +32,6 @@ function setClickHandler(button, url, div) {
     $(div).load('/php/' + url)
   })
 }
-
+    alert('jungle')
 
 </script>

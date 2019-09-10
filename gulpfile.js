@@ -80,7 +80,7 @@ exports.pages = pages
 
 
 function phps() {
-  return gulp.src('./src/php/**/*')
+  return gulp.src('./src/php/**/*.php')
              .pipe(customPlumber('php'))
              .pipe(gulp.dest('www/php'))
 }
