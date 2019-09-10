@@ -87,16 +87,6 @@ function phps() {
 exports.phps = phps
 
 
-function pups() {
-  return gulp.src('./src/**/*.pup')
-             .pipe(customPlumber('pups'))
-             .pipe(pug())
-             .pipe(rename({ extname: '.php' }))
-             .pipe(gulp.dest('www'))
-}
-exports.pups = pups
-
-
 function styles() {
   return gulp.src('src/stylus/main.styl')
              .pipe(sourcemaps.init())
@@ -133,7 +123,6 @@ function watchFiles() {
   gulp.watch('./src/php/**/*.php', phps)
   // gulp.watch('./src/php/**/*.php', gulp.series(phps, reloadBrowser))
 
-  gulp.watch('./src/**/*.pup', gulp.series(pups))
   gulp.watch('./src/index.pug', gulp.series(index, reloadBrowser))
   gulp.watch('./src/pages/**/*.pug', gulp.series(pages, reloadBrowser))
   gulp.watch('./src/includes/**/*.pug', gulp.series(includes, gulp.parallel(pages, index), reloadBrowser))
@@ -148,7 +137,7 @@ exports.watchFiles = watchFiles
 const build = gulp.series(
   nuke,
   includes,
-  gulp.parallel(index, pages, js, phps, images, styles, pups),
+  gulp.parallel(index, pages, js, phps, images, styles),
   gza
 )
 exports.build = build
