@@ -5,7 +5,7 @@ function getDB($db_file = '../../data/aym.sqlite') {
   try {
     $db = new PDO('sqlite:' . $db_file);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); # or FETCH ASSOC, can override
+    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $db;
   } catch(PDOException $ex) {
     echo $ex->getMessage();
@@ -47,7 +47,6 @@ function squery($sql, $paramsArray=[]) {
 function getTable($tableName, $sql) {
   $cols = array();
   $records = array();
-  // $sql = "SELECT * FROM {$tableName}";
   $results = squery($sql);
 
   if (!empty($results)) {

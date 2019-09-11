@@ -1,7 +1,9 @@
 <?php
+main();
+
+function main() {
   require_once('db_functions.php');
 
-  // TODO also need to GET column widths array
   $tableName = $_GET['tableName'];
 
   switch ($tableName) {
@@ -13,13 +15,7 @@
       $sql = "SELECT w.ws_id, w.date, w.time, w.type, s.name
               FROM workshops w, studios s
               WHERE w.studio_id = s.st_id";
-      $widths = [4, 2, 1];
-
-      // $results = squery('SELECT name FROM studios');
-      // $studios = array();
-      // foreach ($results as $studio) {
-      //   $studios[] = $studio['name'];
-      // }
+      $col_widths = [4, 2, 1];
 
       $results = squery('SELECT DISTINCT type FROM workshops');
       $types = array();
@@ -39,9 +35,9 @@
   $table = getTable($tableName, $sql);
   $cols = $table['cols'];
   $rows = $table['rows'];
+}
 
-
-  // doesn't work - line 49 syntax error?
+  // merge this fn with makeSelectString
   function getOptions($sql, $field) {
     $options = array();
     $results = squery($sql);
@@ -54,6 +50,16 @@
     return $options;
   }
 
+  function makeSelectString($options, $field) {
+    // $options = ['aym', 'yoga', 'int']
+    $html = "<select name={$field}>";
+    foreach ($options as $option) {
+      $html .= "<option value={$option}>{$option}</option>";
+    }
+    $html .="</select>";
+    // replace $cols[x] with $html?
+    return $html;
+  }
 
 ?>
 
