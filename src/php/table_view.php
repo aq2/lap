@@ -1,17 +1,65 @@
 <?php
   require_once('db_functions.php');
 
-  // also need to GET column widths array
-
+  // TODO also need to GET column widths array
   $tableName = $_GET['tableName'];
-  $table = getTable($tableName);
-  // TODO $table = getTable($tableName, customSQL);
+
+  switch ($tableName) {
+    case 'studios':
+      $sql = "SELECT * FROM studios";
+      $col_widths = [6, 25, 30, 15, 21];
+      break;
+    case 'workshops':
+      $sql = "SELECT w.ws_id, w.date, w.time, w.type, s.name
+              FROM workshops w, studios s
+              WHERE w.studio_id = s.st_id";
+      $widths = [4, 2, 1];
+
+      // $results = squery('SELECT name FROM studios');
+      // $studios = array();
+      // foreach ($results as $studio) {
+      //   $studios[] = $studio['name'];
+      // }
+
+      $results = squery('SELECT DISTINCT type FROM workshops');
+      $types = array();
+      foreach ($results as $type) {
+        $types[] = $type['type'];
+      }
+
+       $types = getOptions('SELECT DISTINCT type FROM workshops', 'type');
+      // $studios = getOptions('SELECT name FROM studios', 'name');
+
+      $coltypes = [4 => $types, 5 => $studios];
+      break;
+  }
+
+
+
+  $table = getTable($tableName, $sql);
   $cols = $table['cols'];
   $rows = $table['rows'];
+
+
+  // doesn't work - line 49 syntax error?
+  function getOptions($sql, $field) {
+    $options = array();
+    $results = squery($sql);
+    foreach ($results as $option) {
+      // recho('opt', $option);
+      // gecho('g', $option[$field]);
+      $options[] = $option[$field];   # don't work - syntax error unexpected {
+    }
+    recho('opt', $options);
+    return $options;
+  }
+
+
 ?>
 
 <table class='show'>
-  <col style='width:6%'> <!-- hardcoded! -->
+  <!-- loop through column $widths -->
+  <col style='width:6%'>
   <col style='width:25%'>
   <col style='width:30%'>
   <col style='width:15%'>

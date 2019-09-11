@@ -20,7 +20,7 @@ $records = [
 initTable('studios', $columns, $schema, $records);
 
 // create workshop table
-$columns = ['workshop_id', 'date', 'time', 'studio_id', 'type'];
+$columns = ['ws_id', 'date', 'time', 'studio_id', 'type'];
 $schema = ['INTEGER PRIMARY KEY', 'TEXT NOT NULL', 'TEXT NOT NULL', 'INTEGER NOT NULL', 'TEXT NOT NULL'];
 $records = [
   ['Sat 28th September 2019', '1-4pm', 4, 'aym'],
