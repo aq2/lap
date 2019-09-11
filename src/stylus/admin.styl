@@ -4,7 +4,7 @@ body
 
 
 // admin_buttons.php
-#adBtnsDiv
+#adminBtnsDiv
   width 100%
   display flex
   background #333
@@ -23,7 +23,6 @@ table.show
   width 85%
   margin 0 auto
   table-layout fixed
-  border 1px solid black
   border-collapse collapse
 
   td, th
@@ -38,10 +37,8 @@ table.show
 
   .input th
     padding 0
-    // padding 0.5em 0 0.5em 0
 
   th input[type='text']
-    padding 0
     width 100%
     box-sizing border-box
 
@@ -49,8 +46,6 @@ table.show
     width 100px
     display inline-block
 
-
-// specificities
-.mapRef
-  overflow hidden
-  text-overflow ellipsis
+  td
+    overflow hidden
+    text-overflow ellipsis

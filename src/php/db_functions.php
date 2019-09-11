@@ -42,6 +42,8 @@ function squery($sql, $paramsArray=[]) {
 
 
 // returns contents of db table as $table->$rows and $cols
+// TODO add custom sql option - can pass in a more complex query
+// function getTable($tableName, $sql="SELECT * FROM {$tableName}") {
 function getTable($tableName) {
   $cols = array();
   $records = array();

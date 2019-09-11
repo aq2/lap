@@ -53,13 +53,13 @@ function index() {
 exports.index = index
 
 
-
 function js() {
   return gulp.src('src/js/**/*.js')
              .pipe(customPlumber('javascript'))
              .pipe(gulp.dest('www/js'))
 }
 exports.js = js
+
 
 function nuke() {
   gulp.src('src')
@@ -120,8 +120,8 @@ function watchFiles() {
   // gulp.watch('./src/images/**/*.*', images)
   gulp.watch('./src/stylus/**/*.styl', styles)
   gulp.watch('./src/js/**/*.js', gulp.series(js, reloadBrowser))
-  gulp.watch('./src/php/**/*.php', phps)
-  // gulp.watch('./src/php/**/*.php', gulp.series(phps, reloadBrowser))
+  // gulp.watch('./src/php/**/*.php', phps)
+  gulp.watch('./src/php/**/*.php', gulp.series(phps, reloadBrowser))
 
   gulp.watch('./src/index.pug', gulp.series(index, reloadBrowser))
   gulp.watch('./src/pages/**/*.pug', gulp.series(pages, reloadBrowser))
