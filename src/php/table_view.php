@@ -9,12 +9,12 @@ switch ($tableName) {
     $col_widths = [6, 25, 30, 15, 21];
     break;
   case 'workshops':
-    $sql = "SELECT w.ws_id, w.date, w.time, w.type, s.name
+    $sql = "SELECT w.ws_id, w.date, w.time, w.type, s.studio
             FROM workshops w, studios s
             WHERE w.studio_id = s.st_id";
     $col_widths = [5, 18, 8, 10, 20, 18];
     $specialColumns = [3 => 'workshops', 4 => 'studios'];
-    $specialNumbers = array_keys($specialColumns);
+    // $specialNumbers = array_keys($specialColumns);
     break;
 }
 
@@ -22,14 +22,15 @@ $table = getTable($tableName, $sql);
 $cols = $table['cols'];
 $rows = $table['rows'];
 
-if (isset($specialColumns)) {
-  $rows = injectSelect($rows, $cols, $specialColumns)[0];
-  $selects = injectSelect($rows, $cols, $specialColumns)[1];
-}
+// if (isset($specialColumns)) {
+//   $rows = injectSelect($rows, $cols, $specialColumns)[0];
+//   $selects = injectSelect($rows, $cols, $specialColumns)[1];
+// }
 
 
 // foreach special, build select string, then inject into rows[x]
 // TODO a bit of a mess?
+// TODO DON'T INJECT! - only into last row, or onclick
 function injectSelect($rows, $cols, $specialColumns) {
   $selects = [];
   foreach ($specialColumns as $col_num => $table) {
@@ -90,8 +91,8 @@ function makeSelectString($options, $field) {
           $i++;   # move onto next cell
         }
         echo "<th>";
-        echo "<button id='del{$j}'>delete</button>";
-        echo "<button id='moar{$j}'>moar</button>";
+        echo "<button id='del{$j}' class='delete'>delete</button>";
+        echo "<button id='moar{$j}' class='moar'>moar</button>";
         echo "</th></tr>";
         $j++;   # move on to next row
       }
@@ -106,7 +107,7 @@ function makeSelectString($options, $field) {
           $html = array_shift($selects);
           echo "<th id='new{$c}'>{$html}</th>";
         } else {
-          echo "<th><input id=new{$c}' type='text' name={$col} required placeholder='add new {$tableName}'></th>";
+          echo "<td><input id=new{$c}' type='text' name={$col} required placeholder='add new {$tableName}'></td>";
         }
       }
     ?>
@@ -120,17 +121,42 @@ function makeSelectString($options, $field) {
 </table>
 
 <script>
-  // should these be two be in controller - or at least call a controller fn?
-  function cancel() {}
-  function add() {}
+  assignClickHandlers()
 
   function assignClickHandlers() {
-    // cells
-    // delete
-    // moar
-    // add fresh
-    // cancel fresh
     // they all post something to controller
+
+    // cells
+    $('td').click( function() {
+      // change style -> change to input or editable div?
+      // is it a special? -> change to select
+      // another click handler for enter keypress?
+      alert(this.id + ' cell clicked')
+    })
+
+
+    // delete
+    $('.delete').click( function() {
+      alert(this.id + ' clicked')
+    })
+
+    // moar
+    $('.moar').click( function() {
+      alert(this.id + ' clicked')
+    })
+
+    // add fresh
+    $('#add').click( function() {
+      alert(this.id + ' clicked')
+    })
+
+
+    // cancel fresh
+    $('#cancel').click( function() {
+      alert(this.id + ' clicked')
+    })
+
+
   }
 
 

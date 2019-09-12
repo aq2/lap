@@ -10,7 +10,7 @@ if (file_exists($db_file)) {
 }
 
 // create and populate new studios table
-$columns = ['st_id', 'name', 'address', 'mapRef'];
+$columns = ['st_id', 'studio', 'address', 'mapRef'];
 $schema = ['INTEGER PRIMARY KEY', 'TEXT NOT NULL UNIQUE', 'TEXT NOT NULL', 'TEXT'];
 $records = [
   ['Lotus Loft Yoga Centre', '25 Southernhay East, Exeter', '!1m18!1m12!1m3!1d2525.8342564783893!2d-3.5261599999999653!3d50.723014000000006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x486da43db07c12b7%3A0x7cc3e5bad826796d!2sLotus+Loft!5e0!3m2!1sen!2suk!4v1422712288800'],
