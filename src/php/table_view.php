@@ -107,7 +107,8 @@ function makeSelectString($options, $field) {
           $html = array_shift($selects);
           echo "<th id='new{$c}'>{$html}</th>";
         } else {
-          echo "<td><input id=new{$c}' type='text' name={$col} required placeholder='add new {$tableName}'></td>";
+          echo "<td><input id='new{$c}' type='text' name={$col}
+                required placeholder='add new {$tableName}'></td>";
         }
       }
     ?>
