@@ -65,6 +65,7 @@ function initTable($name, $cols, $schema, $rows) {
   squery($sql);
 
   // prepare out insert statements with positional ? params values
+  // TODO remove the spaces between array elements, and use implode?
   $cols_str = tidy($cols_str);
   $vals_str = tidy($vals_str);
   $sql = "INSERT INTO {$name} {$cols_str} {$vals_str}";
@@ -78,6 +79,7 @@ function initTable($name, $cols, $schema, $rows) {
   echo "<div id='adMessages'>{$name} table successfully created.</div>";
 }
 
+// TODO remove the spaces between array elements, and use implode?
 // remove extraenous comma and space, and closes parentheses
 function tidy($str) {
   $str = rtrim($str, ', ');

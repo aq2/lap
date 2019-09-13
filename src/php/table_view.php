@@ -54,6 +54,8 @@ function injectSelect($rows, $cols, $specialColumns) {
 function makeSelectString($options, $field) {
   $html = "<select name={$field}>";
   foreach ($options as $option) {
+    // TODO value shiould be index? eg 1,2 or 3 rather than option value
+    // TODO mark which one is selected - need to rethink a bit
     $html .= "<option value={$option}>{$option}</option>";
   }
   $html .="</select>";
@@ -63,7 +65,7 @@ function makeSelectString($options, $field) {
 ?>
 
 
-<table class='show'>
+  <table class='show' id=<?= $tableName ?>>
   <?php
     foreach ($col_widths as $width) {
       echo "<col style='width:{$width}%'>";
@@ -162,15 +164,18 @@ function makeSelectString($options, $field) {
                    form_fields[this.name] = '"' + this.value + '"'
       })
 
+      const table_name = $('table').attr('id');
+
       // TODO should validate for empty inputs here rather than php on server...
       $.post(cont_url, { action: 'add',
+                         db_table: table_name,
                          form_fields: form_fields
                         },
         function(data) {console.log(data)}
     )})
 
 
-    // input type=reset?
+    // input type=reset - only works in a form?
     // cancel fresh
     $('#cancel').click( function() {
       $.post(cont_url, { action: 'cancel' },

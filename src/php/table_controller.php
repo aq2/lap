@@ -9,6 +9,7 @@ switch ($_POST['action']) {
   case 'add':
     // validate 'required'
     $fields = $_POST['form_fields'];
+    $table_name = $_POST['db_table'];
     $f_arr = array_keys($fields);
     $v_arr = array_values($fields);
 
@@ -27,7 +28,7 @@ switch ($_POST['action']) {
     // print_r($v_str);
 
     // HARDCODED TODO
-    $sql = "INSERT INTO studios ({$f_str}) VALUES ({$v_str})";
+    $sql = "INSERT INTO $table_name ({$f_str}) VALUES ({$v_str})";
     print_r($sql);
     // squery($sql);
     $db = getDB();
