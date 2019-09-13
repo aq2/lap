@@ -1,10 +1,22 @@
-<?php    // controller for show_studios_view
+<?php    // controller for table_view
 
 require_once('db_functions.php');
 
-print_r($_GET);  // for all GET variables
+echo "data posted:  ";
+print_r($_POST);  // for all GET variables
 
-// needs to respond to GET requests
+switch ($_POST['action']) {
+  case 'add':
+    echo "<br>add data<br>";
+    // validate 'required'
+    $fields = $_POST['form_fields'];
+    recho('ff', $fields);
+    foreach ($fields as $k=>$v) {
+      echo $k, $v;
+    }
+    break;
+}
+
 
 // delete -> eg delete1 -> id = 1
 // delete('studios', id)
@@ -14,6 +26,10 @@ print_r($_GET);  // for all GET variables
 
 // add new studio
 // add('studios', [prepared params])
+
+
+
+
 
 // cancel add studio
 // cancel() -> wipes input boxes

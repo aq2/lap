@@ -14,7 +14,7 @@ switch ($tableName) {
             WHERE w.studio_id = s.st_id";
     $col_widths = [5, 18, 8, 10, 20, 18];
     $specialColumns = [3 => 'workshops', 4 => 'studios'];
-    // $specialNumbers = array_keys($specialColumns);
+    $specialNumbers = array_keys($specialColumns);
     break;
 }
 
@@ -22,10 +22,10 @@ $table = getTable($tableName, $sql);
 $cols = $table['cols'];
 $rows = $table['rows'];
 
-// if (isset($specialColumns)) {
-//   $rows = injectSelect($rows, $cols, $specialColumns)[0];
-//   $selects = injectSelect($rows, $cols, $specialColumns)[1];
-// }
+if (isset($specialColumns)) {
+  // $rows = injectSelect($rows, $cols, $specialColumns)[0];
+  $selects = injectSelect($rows, $cols, $specialColumns)[1];
+}
 
 
 // foreach special, build select string, then inject into rows[x]
@@ -86,7 +86,7 @@ function makeSelectString($options, $field) {
         $i = 0;
         echo "<tr>";
         foreach ($row as $datum) {
-          $tag = ($i==0 ? 'th':'td');   # id column should be a th -> uneditable
+          $tag = ($i==0 ? 'th':'td');   # id column should be uneditable th
           echo "<{$tag} id='r{$j}c{$i}'>{$datum}</{$tag}>";
           $i++;   # move onto next cell
         }
@@ -105,17 +105,17 @@ function makeSelectString($options, $field) {
       for ($c=1; $c<$num_cols; $c++) {
         if (isset($specialNumbers) && in_array($c, $specialNumbers)) {
           $html = array_shift($selects);
-          echo "<th id='new{$c}'>{$html}</th>";
+          echo "<td id='new{$c}'>{$html}</td>";
         } else {
-          echo "<td><input id='new{$c}' type='text' name={$col}
+          echo "<td><input class='inp' id='new{$c}' type='text' name={$cols[$c]}
                 required placeholder='add new {$tableName}'></td>";
         }
       }
     ?>
 
       <th>
-        <button id='cancel' onclick='cancelAdd()'>cancel</button>
-        <button id='add' onclick='add()'>add</button>
+        <button id='cancel'>cancel</button>
+        <button id='add'>add</button>
       </th>
     </tr>
   </tbody>
@@ -126,35 +126,54 @@ function makeSelectString($options, $field) {
 
   function assignClickHandlers() {
     // they all post something to controller
+    const cont_url = '/php/table_controller.php'
 
     // cells
     $('td').click( function() {
       // change style -> change to input or editable div?
       // is it a special? -> change to select
       // another click handler for enter keypress?
-      alert(this.id + ' cell clicked')
+      $.post(cont_url, { action: 'edit',
+                         id: this.id },
+        function(data) {console.log(data)})
     })
 
 
     // delete
     $('.delete').click( function() {
-      alert(this.id + ' clicked')
-    })
+      $.post(cont_url, { action: 'delete',
+                         id: this.id },
+        function(data) {console.log(data)}
+    )})
 
     // moar
     $('.moar').click( function() {
-      alert(this.id + ' clicked')
+      $.post(cont_url, { action: 'moar',
+                         id: this.id },
+        function(data) {console.log(data)})
     })
 
     // add fresh
     $('#add').click( function() {
-      alert(this.id + ' clicked')
+      let form_fields = {}
+
+      $('.input').find('input, select')
+                 .each( function() {
+                   form_fields[this.name] = this.value
+      })
+
+      $.post(cont_url, { action: 'add',
+                         form_fields: form_fields
+                        },
+        function(data) {console.log(data)})
     })
 
 
+    // input type=reset?
     // cancel fresh
     $('#cancel').click( function() {
-      alert(this.id + ' clicked')
+      $.post(cont_url, { action: 'cancel' },
+        function(data) {console.log(data)})
     })
 
 
