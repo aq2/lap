@@ -159,14 +159,15 @@ function makeSelectString($options, $field) {
 
       $('.input').find('input, select')
                  .each( function() {
-                   form_fields[this.name] = this.value
+                   form_fields[this.name] = '"' + this.value + '"'
       })
 
+      // TODO should validate for empty inputs here rather than php on server...
       $.post(cont_url, { action: 'add',
                          form_fields: form_fields
                         },
-        function(data) {console.log(data)})
-    })
+        function(data) {console.log(data)}
+    )})
 
 
     // input type=reset?

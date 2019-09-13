@@ -2,18 +2,37 @@
 
 require_once('db_functions.php');
 
-echo "data posted:  ";
-print_r($_POST);  // for all GET variables
+// echo "data posted:  ";
+// print_r($_POST);  // for all GET variables
 
 switch ($_POST['action']) {
   case 'add':
-    echo "<br>add data<br>";
     // validate 'required'
     $fields = $_POST['form_fields'];
-    recho('ff', $fields);
-    foreach ($fields as $k=>$v) {
-      echo $k, $v;
+    $f_arr = array_keys($fields);
+    $v_arr = array_values($fields);
+
+    // validate - make sure values arent ''
+    foreach($v_arr as $v) {
+      if ($v == '') {
+        die('empty fields');
+      }
     }
+    // print_r($f_arr);
+    // print_r($v_arr);
+
+    $f_str = implode(',', $f_arr);
+    $v_str = implode(',', $v_arr);
+    // print_r($f_str);
+    // print_r($v_str);
+
+    // HARDCODED TODO
+    $sql = "INSERT INTO studios ({$f_str}) VALUES ({$v_str})";
+    print_r($sql);
+    // squery($sql);
+    $db = getDB();
+    $db->query($sql);
+
     break;
 }
 
