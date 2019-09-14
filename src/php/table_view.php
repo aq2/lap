@@ -2,8 +2,8 @@
 
 require_once('db_functions.php');
 
-$tableName = $_GET['tableName'];
-switch ($tableName) {
+$table = $_GET['tableName'];
+switch ($table) {
   case 'studios':
     $sql = "SELECT * FROM studios";
     $col_widths = [6, 25, 30, 15, 21];
@@ -18,9 +18,9 @@ switch ($tableName) {
     break;
 }
 
-$table = getTable($tableName, $sql);
-$cols = $table['cols'];
-$rows = $table['rows'];
+$tableData = getTable($table, $sql);
+$cols = $tableData['cols'];
+$rows = $tableData['rows'];
 
 if (isset($specialColumns)) {
   // $rows = injectSelect($rows, $cols, $specialColumns)[0];
@@ -65,8 +65,15 @@ function makeSelectString($options, $field) {
 ?>
 
 
-<form action='/php/table_controller.php' method='post' name='fresh'>
-<table class='show' id=<?= $tableName ?>>
+<!---------------------
+    start html here
+---------------------->
+<h1> <?= $table ?> </h1>
+
+<!-- can't put form in table -->
+<form action='/php/table_controller.php' method='post' id='add'>
+
+<table class='show' id=<?= $table ?>>
   <?php
     foreach ($col_widths as $width) {
       echo "<col style='width:{$width}%'>";
@@ -84,23 +91,28 @@ function makeSelectString($options, $field) {
   </thead>
   <tbody>
     <?php
-      $j = 1;   # refers to row number - ie id
+      $j = 1;   # refers to row number, not necess the id
+      $id = 'nope';
       foreach ($rows as $row) {
         $i = 0;
         echo "<tr>";
         foreach ($row as $datum) {
-          $tag = ($i==0 ? 'th':'td');   # id column should be uneditable th
+          $tag = 'td';
+          if ($i == 0) {  # id column
+            $tag = 'th';
+            $id = $datum;
+          }
           echo "<{$tag} id='r{$j}c{$i}'>{$datum}</{$tag}>";
           $i++;   # move onto next cell
         }
         echo "<th>";
-        echo "<button id='del{$j}' class='delete'>delete</button>";
-        echo "<button id='moar{$j}' class='moar'>moar</button>";
+        echo "<button id='del{$id}' class='del' form='no'>delete</button>";
+        echo "<button id='moar{$id}' class='moar' form='no'>moar</button>";
         echo "</th></tr>";
         $j++;   # move on to next row
       }
 
-      // now add input fields for adding new record
+      // now we need the input boxes for adding new record
       echo "<tr class='input'>";
       echo "<th>{$j}</th>";
 
@@ -110,15 +122,17 @@ function makeSelectString($options, $field) {
           $html = array_shift($selects);
           echo "<td id='new{$c}'>{$html}</td>";
         } else {
-          echo "<td><input class='inp' id='new{$c}' type='text' name={$cols[$c]}
-                required placeholder='add new {$tableName}'></td>";
+          echo "<th><input id='new{$c}' type='text' name={$cols[$c]}
+                form='add' required placeholder='add new...'></th>";
         }
       }
     ?>
 
       <th>
-        <button id='cancel'>cancel</button>
-        <input id='add' type='submit' value='add'>
+        <input type='hidden' form='add' name='table' value=<?= $table ?>>
+        <input type='hidden' form='add' name='action' value='add'>
+        <input type='reset' form='add' value='cancel'>
+        <input type='submit' form='add' value='add'>
       </th>
     </tr>
   </tbody>
@@ -126,6 +140,9 @@ function makeSelectString($options, $field) {
 </form>
 
 
+<!-------------------------------------------
+    insert javascripts here
+-------------------------------------------->
 <script>
   assignClickHandlers()
 
@@ -145,10 +162,13 @@ function makeSelectString($options, $field) {
 
 
     // delete
-    $('.delete').click( function() {
+    $('.del').click( function() {
       $.post(cont_url, { action: 'delete',
-                         id: this.id },
-        function(data) {console.log(data)}
+                         id: this.id,
+                         table: $('.show').attr('id')  },
+        function(data) { console.log(data)
+                         location.reload() }
+                          // repost!
     )})
 
     // moar
@@ -157,39 +177,6 @@ function makeSelectString($options, $field) {
                          id: this.id },
         function(data) {console.log(data)})
     })
-
-    // // add fresh
-    // $('#add').click( function() {
-    //   let form_fields = {}
-
-    //   $('.input').find('input, select')
-    //              .each( function() {
-    //                if (!this.value) {
-    //                   console.log('empty')
-    //                   alert(this.name + ' cannot be empty!')
-    //                   return
-    //                }
-    //                form_fields[this.name] = '"' + this.value + '"'
-    //   })
-
-    //   const table_name = $('table').attr('id');
-
-    //   // TODO should validate for empty inputs here rather than php on server...
-    //   $.post(cont_url, { action: 'add',
-    //                      db_table: table_name,
-    //                      form_fields: form_fields
-    //                     },
-    //     function(data) {console.log(data)}
-    // )})
-
-
-    // input type=reset - only works in a form?
-    // cancel fresh
-    $('#cancel').click( function() {
-      $.post(cont_url, { action: 'cancel' },
-        function(data) {console.log(data)})
-    })
-
 
   }
 

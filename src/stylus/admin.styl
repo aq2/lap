@@ -11,11 +11,6 @@ body
   margin-bottom 2em
   justify-content space-between
 
-#showBtnsDiv
-  background blue
-
-#initBtnDiv
-  background red
 
 
 // tables_view
@@ -25,22 +20,19 @@ table.show
   table-layout fixed
   border-collapse collapse
 
-  td, th
-    padding 0.5em
-    border 1px solid black
-
   tr:nth-child(odd)
     background #777
 
   th
+    padding 0.25em
+    border 1px solid black
     background #444
 
-  .input th
-    padding 0
 
-  th input[type='text']
-    // width 100%
-    // box-sizing border-box
+  input[type='text']
+    width 100%
+    padding 0em
+    box-sizing border-box
 
   input[type='submit']
     width 100px
@@ -49,4 +41,5 @@ table.show
   td
     overflow hidden
     text-overflow ellipsis
-
+    padding 0.5em
+    border 1px solid black
