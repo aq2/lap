@@ -2,15 +2,15 @@
 
 require_once('db_functions.php');
 
-// echo "data posted:  ";
-print_r($_POST);
+// echo "data GETed:  ";
+// print_r($_GET);
 
 
-if (isset($_POST['action'])) {
-  switch ($_POST['action']) {
+if (isset($_GET['action'])) {
+  switch ($_GET['action']) {
     case 'add':    # normal form handling here for adding new records
-      $f_arr = array_keys($_POST);
-      $v_arr = array_values($_POST);
+      $f_arr = array_keys($_GET);
+      $v_arr = array_values($_GET);
 
       // last element is unnecessary - it's a hidden field action -> add
       $nope = array_pop($f_arr);
@@ -34,12 +34,17 @@ if (isset($_POST['action'])) {
       $db->query($sql);
       $db = null;
 
+      // TODO refresh?
+      echo '<script>
+            alert("bob");
+            $("#showDiv").load("/php/table_view.php?tableName=" + table)
+            </script>';
       break;
 
     case 'delete':    # delete a record
-      $but_id = $_POST['id'];
+      $but_id = $_GET['id'];
       $row_id = ltrim($but_id, 'del');
-      $table = $_POST['table'];
+      $table = $_GET['table'];
 
       switch ($table) {
         case 'studios':

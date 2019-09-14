@@ -71,7 +71,7 @@ function makeSelectString($options, $field) {
 <h1> <?= $table ?> </h1>
 
 <!-- can't put form in table -->
-<form action='/php/table_controller.php' method='post' id='add'>
+<form action='/php/table_controller.php' method='GET' id='add'>
 
 <table class='show' id=<?= $table ?>>
   <?php
@@ -147,7 +147,7 @@ function makeSelectString($options, $field) {
   assignClickHandlers()
 
   function assignClickHandlers() {
-    // they all post something to controller
+    // they all GET something to controller
     const cont_url = '/php/table_controller.php'
 
     // cells
@@ -155,7 +155,7 @@ function makeSelectString($options, $field) {
       // change style -> change to input or editable div?
       // is it a special? -> change to select
       // another click handler for enter keypress?
-      $.post(cont_url, { action: 'edit',
+      $.get(cont_url, { action: 'edit',
                          id: this.id },
         function(data) {console.log(data)})
     })
@@ -163,17 +163,18 @@ function makeSelectString($options, $field) {
 
     // delete
     $('.del').click( function() {
-      $.post(cont_url, { action: 'delete',
+      table =  $('.show').attr('id')
+      $.get(cont_url, { action: 'delete',
                          id: this.id,
-                         table: $('.show').attr('id')  },
+                         table: table },
         function(data) { console.log(data)
-                         location.reload() }
-                          // repost!
+                         $('#showDiv').load('/php/table_view.php?tableName=' + table)
+                       }
     )})
 
     // moar
     $('.moar').click( function() {
-      $.post(cont_url, { action: 'moar',
+      $.get(cont_url, { action: 'moar',
                          id: this.id },
         function(data) {console.log(data)})
     })
