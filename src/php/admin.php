@@ -39,8 +39,6 @@
     // add click handlers to showBtns
     $('.showBtn').click( function() {
       $('#showDiv').load('/php/table_view.php?tableName=' + this.id)
-      // TODO need to pass custom col widths here, and custom sql?
-      // $('#showDiv').load('/php/table_view.php?tableName=' + this.id)
     })
   }
 

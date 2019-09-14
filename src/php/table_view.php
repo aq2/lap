@@ -9,7 +9,7 @@ switch ($tableName) {
     $col_widths = [6, 25, 30, 15, 21];
     break;
   case 'workshops':
-    $sql = "SELECT w.ws_id, w.date, w.time, w.type, s.name
+    $sql = "SELECT w.ws_id, w.date, w.time, w.type, s.studio
             FROM workshops w, studios s
             WHERE w.studio_id = s.st_id";
     $col_widths = [5, 18, 8, 10, 20, 18];
@@ -23,13 +23,14 @@ $cols = $table['cols'];
 $rows = $table['rows'];
 
 if (isset($specialColumns)) {
-  $rows = injectSelect($rows, $cols, $specialColumns)[0];
+  // $rows = injectSelect($rows, $cols, $specialColumns)[0];
   $selects = injectSelect($rows, $cols, $specialColumns)[1];
 }
 
 
 // foreach special, build select string, then inject into rows[x]
 // TODO a bit of a mess?
+// TODO DON'T INJECT! - only into last row, or onclick
 function injectSelect($rows, $cols, $specialColumns) {
   $selects = [];
   foreach ($specialColumns as $col_num => $table) {
@@ -53,6 +54,8 @@ function injectSelect($rows, $cols, $specialColumns) {
 function makeSelectString($options, $field) {
   $html = "<select name={$field}>";
   foreach ($options as $option) {
+    // TODO value shiould be index? eg 1,2 or 3 rather than option value
+    // TODO mark which one is selected - need to rethink a bit
     $html .= "<option value={$option}>{$option}</option>";
   }
   $html .="</select>";
@@ -62,7 +65,8 @@ function makeSelectString($options, $field) {
 ?>
 
 
-<table class='show'>
+<form action='/php/table_controller.php' method='post' name='fresh'>
+<table class='show' id=<?= $tableName ?>>
   <?php
     foreach ($col_widths as $width) {
       echo "<col style='width:{$width}%'>";
@@ -85,13 +89,13 @@ function makeSelectString($options, $field) {
         $i = 0;
         echo "<tr>";
         foreach ($row as $datum) {
-          $tag = ($i==0 ? 'th':'td');   # id column should be a th -> uneditable
+          $tag = ($i==0 ? 'th':'td');   # id column should be uneditable th
           echo "<{$tag} id='r{$j}c{$i}'>{$datum}</{$tag}>";
           $i++;   # move onto next cell
         }
         echo "<th>";
-        echo "<button id='del{$j}'>delete</button>";
-        echo "<button id='moar{$j}'>moar</button>";
+        echo "<button id='del{$j}' class='delete'>delete</button>";
+        echo "<button id='moar{$j}' class='moar'>moar</button>";
         echo "</th></tr>";
         $j++;   # move on to next row
       }
@@ -104,33 +108,89 @@ function makeSelectString($options, $field) {
       for ($c=1; $c<$num_cols; $c++) {
         if (isset($specialNumbers) && in_array($c, $specialNumbers)) {
           $html = array_shift($selects);
-          echo "<th id='new{$c}'>{$html}</th>";
+          echo "<td id='new{$c}'>{$html}</td>";
         } else {
-          echo "<th><input id=new{$c}' type='text' name={$col} required placeholder='add new {$tableName}'></th>";
+          echo "<td><input class='inp' id='new{$c}' type='text' name={$cols[$c]}
+                required placeholder='add new {$tableName}'></td>";
         }
       }
     ?>
 
       <th>
-        <button id='cancel' onclick='cancelAdd()'>cancel</button>
-        <button id='add' onclick='add()'>add</button>
+        <button id='cancel'>cancel</button>
+        <input id='add' type='submit' value='add'>
       </th>
     </tr>
   </tbody>
 </table>
+</form>
+
 
 <script>
-  // should these be two be in controller - or at least call a controller fn?
-  function cancel() {}
-  function add() {}
+  assignClickHandlers()
 
   function assignClickHandlers() {
-    // cells
-    // delete
-    // moar
-    // add fresh
-    // cancel fresh
     // they all post something to controller
+    const cont_url = '/php/table_controller.php'
+
+    // cells
+    $('td').click( function() {
+      // change style -> change to input or editable div?
+      // is it a special? -> change to select
+      // another click handler for enter keypress?
+      $.post(cont_url, { action: 'edit',
+                         id: this.id },
+        function(data) {console.log(data)})
+    })
+
+
+    // delete
+    $('.delete').click( function() {
+      $.post(cont_url, { action: 'delete',
+                         id: this.id },
+        function(data) {console.log(data)}
+    )})
+
+    // moar
+    $('.moar').click( function() {
+      $.post(cont_url, { action: 'moar',
+                         id: this.id },
+        function(data) {console.log(data)})
+    })
+
+    // // add fresh
+    // $('#add').click( function() {
+    //   let form_fields = {}
+
+    //   $('.input').find('input, select')
+    //              .each( function() {
+    //                if (!this.value) {
+    //                   console.log('empty')
+    //                   alert(this.name + ' cannot be empty!')
+    //                   return
+    //                }
+    //                form_fields[this.name] = '"' + this.value + '"'
+    //   })
+
+    //   const table_name = $('table').attr('id');
+
+    //   // TODO should validate for empty inputs here rather than php on server...
+    //   $.post(cont_url, { action: 'add',
+    //                      db_table: table_name,
+    //                      form_fields: form_fields
+    //                     },
+    //     function(data) {console.log(data)}
+    // )})
+
+
+    // input type=reset - only works in a form?
+    // cancel fresh
+    $('#cancel').click( function() {
+      $.post(cont_url, { action: 'cancel' },
+        function(data) {console.log(data)})
+    })
+
+
   }
 
 

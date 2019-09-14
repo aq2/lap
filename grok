@@ -53,8 +53,8 @@ case "$1" in
   db)
     docker-compose exec db /bin/bash -i;;
   php)
-    docker-compose exec php /bin/bash -i;;
-  *)
+    docker-compose exec lap /bin/sh -i;;
+  go)
     docker-compose up -d
     trap ctrl_c INT
     gulp

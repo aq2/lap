@@ -16,7 +16,6 @@ function getDB($db_file = '../../data/aym.sqlite') {
 
 // returns database table names as an array
 function getTableNames() {
-  $tables = array();
   $sql = "SELECT * FROM sqlite_master WHERE type='table'";
   $results = squery($sql);
   foreach ($results as $tbl) {
@@ -45,8 +44,6 @@ function squery($sql, $paramsArray=[]) {
 // TODO add custom sql option - can pass in a more complex query
 // function getTable($tableName, $sql="SELECT * FROM {$tableName}") {
 function getTable($tableName, $sql) {
-  $cols = array();
-  $records = array();
   $results = squery($sql);
 
   if (!empty($results)) {
