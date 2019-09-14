@@ -65,7 +65,6 @@ function getTable($tableName, $sql) {
 // cancelAdd() - not really a db function, more a shared controller fn
 
 
-sdsadsadsadsad
 // my 'debuggers'
 function gecho($desc, $var='') {
   echo "<br>{$desc}: {$var}<br>";
