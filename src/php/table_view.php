@@ -65,7 +65,8 @@ function makeSelectString($options, $field) {
 ?>
 
 
-  <table class='show' id=<?= $tableName ?>>
+<form action='/php/table_controller.php' method='post' name='fresh'>
+<table class='show' id=<?= $tableName ?>>
   <?php
     foreach ($col_widths as $width) {
       echo "<col style='width:{$width}%'>";
@@ -117,11 +118,13 @@ function makeSelectString($options, $field) {
 
       <th>
         <button id='cancel'>cancel</button>
-        <button id='add'>add</button>
+        <input id='add' type='submit' value='add'>
       </th>
     </tr>
   </tbody>
 </table>
+</form>
+
 
 <script>
   assignClickHandlers()
@@ -155,24 +158,29 @@ function makeSelectString($options, $field) {
         function(data) {console.log(data)})
     })
 
-    // add fresh
-    $('#add').click( function() {
-      let form_fields = {}
+    // // add fresh
+    // $('#add').click( function() {
+    //   let form_fields = {}
 
-      $('.input').find('input, select')
-                 .each( function() {
-                   form_fields[this.name] = '"' + this.value + '"'
-      })
+    //   $('.input').find('input, select')
+    //              .each( function() {
+    //                if (!this.value) {
+    //                   console.log('empty')
+    //                   alert(this.name + ' cannot be empty!')
+    //                   return
+    //                }
+    //                form_fields[this.name] = '"' + this.value + '"'
+    //   })
 
-      const table_name = $('table').attr('id');
+    //   const table_name = $('table').attr('id');
 
-      // TODO should validate for empty inputs here rather than php on server...
-      $.post(cont_url, { action: 'add',
-                         db_table: table_name,
-                         form_fields: form_fields
-                        },
-        function(data) {console.log(data)}
-    )})
+    //   // TODO should validate for empty inputs here rather than php on server...
+    //   $.post(cont_url, { action: 'add',
+    //                      db_table: table_name,
+    //                      form_fields: form_fields
+    //                     },
+    //     function(data) {console.log(data)}
+    // )})
 
 
     // input type=reset - only works in a form?
