@@ -18,27 +18,27 @@ if (isset($_GET['action'])) {
 
       // next last element is hidden field for 'table' -> db table name
       $nope = array_pop($f_arr);
+      $table_name = array_pop($v_arr);
 
       // add quotes to form values
       foreach ($v_arr as $v) {
         $qv_arr[] = '"' . $v . '"';
       }
 
-      $table_name = array_pop($qv_arr);
-
+      // change arrays to strings
       $f_str = implode(',', $f_arr);
       $v_str = implode(',', $qv_arr);
 
+      // do db stuff
       $sql = "INSERT INTO $table_name ({$f_str}) VALUES ({$v_str})";
       $db = getDB();
       $db->query($sql);
       $db = null;
 
-      // TODO refresh?
-      echo '<script>
-            alert("bob");
-            $("#showDiv").load("/php/table_view.php?tableName=" + table)
-            </script>';
+      // refresh page
+      $goto = '/admin/table_view.php?tableName=' . $table_name;
+      header('Location: ' . $goto);
+
       break;
 
     case 'delete':    # delete a record
@@ -60,6 +60,9 @@ if (isset($_GET['action'])) {
       $db->query($sql);
       $db = null;
 
+      // refresh page
+      $goto = '/admin/table_view.php?tableName=' . $table_name;
+      header('Location: ' . $goto);
 
 // moar -> moar1
 // show moar -> workshops here

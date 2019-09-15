@@ -1,77 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel='stylesheet', href='/main.min.css'>
+  <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
+</head>
+
+<body>
+
 <?php
 
+require_once('admin_buttons.php');
+require_once('table_controller.php');
 require_once('db_functions.php');
 
-$table = $_GET['tableName'];
-switch ($table) {
-  case 'studios':
-    $sql = "SELECT * FROM studios";
-    $col_widths = [6, 25, 30, 15, 21];
-    break;
-  case 'workshops':
-    $sql = "SELECT w.ws_id, w.date, w.time, w.type, s.studio
-            FROM workshops w, studios s
-            WHERE w.studio_id = s.st_id";
-    $col_widths = [5, 18, 8, 10, 20, 18];
-    $specialColumns = [3 => 'workshops', 4 => 'studios'];
-    $specialNumbers = array_keys($specialColumns);
-    break;
-}
 
-$tableData = getTable($table, $sql);
-$cols = $tableData['cols'];
-$rows = $tableData['rows'];
-
-if (isset($specialColumns)) {
-  // $rows = injectSelect($rows, $cols, $specialColumns)[0];
-  $selects = injectSelect($rows, $cols, $specialColumns)[1];
-}
-
-
-// foreach special, build select string, then inject into rows[x]
-// TODO a bit of a mess?
-// TODO DON'T INJECT! - only into last row, or onclick
-function injectSelect($rows, $cols, $specialColumns) {
-  $selects = [];
-  foreach ($specialColumns as $col_num => $table) {
-    $fieldName = $cols[$col_num];
-    $sql = "SELECT DISTINCT $fieldName FROM {$table}";
-    $results = squery($sql);
-    $options = [];
-    foreach ($results as $k => $option) {
-      $options[] = $option[$fieldName];
-    }
-    $select_html = makeSelectString($options, $fieldName);
-    $selects[] = $select_html;
-    foreach ($rows as $key => $row) {
-      $rows[$key][$col_num] = $select_html;
-    }
-  }
-  return [$rows, $selects];
-}
-
-
-function makeSelectString($options, $field) {
-  $html = "<select name={$field}>";
-  foreach ($options as $option) {
-    // TODO value shiould be index? eg 1,2 or 3 rather than option value
-    // TODO mark which one is selected - need to rethink a bit
-    $html .= "<option value={$option}>{$option}</option>";
-  }
-  $html .="</select>";
-  return $html;
-}
+ob_start();
 
 ?>
 
-
-<!---------------------
-    start html here
----------------------->
 <h1> <?= $table ?> </h1>
 
 <!-- can't put form in table -->
-<form action='/php/table_controller.php' method='GET' id='add'>
+<form action='/admin/table_controller.php' method='GET' id='add'>
 
 <table class='show' id=<?= $table ?>>
   <?php
@@ -139,6 +89,80 @@ function makeSelectString($options, $field) {
 </table>
 </form>
 
+<?php
+$myhtml = ob_get_clean();
+
+showIt($myhtml);
+
+function showIt($html) {
+  echo $html;
+}
+
+
+function showTable() {
+  $table = $_GET['tableName'];
+  switch ($table) {
+    case 'studios':
+      $sql = "SELECT * FROM studios";
+      $col_widths = [6, 25, 30, 15, 21];
+      break;
+    case 'workshops':
+      $sql = "SELECT w.ws_id, w.date, w.time, w.type, s.studio
+              FROM workshops w, studios s
+              WHERE w.studio_id = s.st_id";
+      $col_widths = [5, 18, 8, 10, 20, 18];
+      $specialColumns = [3 => 'workshops', 4 => 'studios'];
+      $specialNumbers = array_keys($specialColumns);
+      break;
+  }
+
+  $tableData = getTable($table, $sql);
+  $cols = $tableData['cols'];
+  $rows = $tableData['rows'];
+
+  if (isset($specialColumns)) {
+    // $rows = injectSelect($rows, $cols, $specialColumns)[0];
+    $selects = injectSelect($rows, $cols, $specialColumns)[1];
+  }
+}
+
+// foreach special, build select string, then inject into rows[x]
+// TODO a bit of a mess?
+// TODO DON'T INJECT! - only into last row, or onclick
+function injectSelect($rows, $cols, $specialColumns) {
+  $selects = [];
+  foreach ($specialColumns as $col_num => $table) {
+    $fieldName = $cols[$col_num];
+    $sql = "SELECT DISTINCT $fieldName FROM {$table}";
+    $results = squery($sql);
+    $options = [];
+    foreach ($results as $k => $option) {
+      $options[] = $option[$fieldName];
+    }
+    $select_html = makeSelectString($options, $fieldName);
+    $selects[] = $select_html;
+    foreach ($rows as $key => $row) {
+      $rows[$key][$col_num] = $select_html;
+    }
+  }
+  return [$rows, $selects];
+}
+
+
+function makeSelectString($options, $field) {
+  $html = "<select name={$field}>";
+  foreach ($options as $option) {
+    // TODO value shiould be index? eg 1,2 or 3 rather than option value
+    // TODO mark which one is selected - need to rethink a bit
+    $html .= "<option value={$option}>{$option}</option>";
+  }
+  $html .="</select>";
+  return $html;
+}
+
+?>
+
+
 
 <!-------------------------------------------
     insert javascripts here
@@ -148,7 +172,7 @@ function makeSelectString($options, $field) {
 
   function assignClickHandlers() {
     // they all GET something to controller
-    const cont_url = '/php/table_controller.php'
+    const cont_url = '/admin/table_controller.php'
 
     // cells
     $('td').click( function() {
@@ -168,7 +192,7 @@ function makeSelectString($options, $field) {
                          id: this.id,
                          table: table },
         function(data) { console.log(data)
-                         $('#showDiv').load('/php/table_view.php?tableName=' + table)
+                         $.post('/php/table_controller.php?tableName=' + table)
                        }
     )})
 

@@ -5,8 +5,9 @@ require_once('db_functions.php');
 // delete db if already exists, getDB() will create it when needed
 $db_file = '../../data/aym.sqlite';
 if (file_exists($db_file)) {
+  copy($db_file, '../../data/aym'.date('h:i-jMy').'.bak');
   unlink($db_file);
-  gecho("$db_file deleted");
+  gecho("$db_file backed up and deleted");
 }
 
 // create and populate new studios table
@@ -40,7 +41,8 @@ initTable('workshops', $columns, $schema, $records);
 // clients
 // contacts/messages
 
-echo "<div id='adMessages'> database and studios successfully created.</div>";
+echo "<h2 id='adMessages'> database successfully created 😃</h2>";
+
 
 
 // construct a table called $name using da data

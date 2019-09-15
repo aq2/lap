@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel='stylesheet', href='/main.min.css'>
-  <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
-</head>
-
-<body>
-
-<?php
+<?php   // admin buttons, view and controller!)
   require_once('db_functions.php');
   $tables = getTableNames();
 ?>
+
 
 <div id='adminBtnsDiv'>
   <div id='showBtnsDiv'>
@@ -25,20 +17,19 @@
   </div>
 </div>
 
-<div id='showDiv'>
-  <p>eventually show tables metadata in here</p>
-</div>
-
-
 <script>
   main()
 
   function main() {
-    setClickHandler('#initBtn', 'init_db.php', '#showDiv')
+    // setClickHandler('#initBtn', 'init_db.php', '#showDiv')
+
+    $('#initBtn').click( function() {
+      $(location).attr('href', '/admin/init_db_view.php');
+    })
 
     // add click handlers to showBtns
     $('.showBtn').click( function() {
-      $('#showDiv').load('/php/table_view.php?tableName=' + this.id)
+      $(location).attr('href', '/admin/table_view.php?tableName=' + this.id);
     })
   }
 

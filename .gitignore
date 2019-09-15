@@ -1,3 +1,4 @@
 www
 ignore
 node_modules
+*.bak
