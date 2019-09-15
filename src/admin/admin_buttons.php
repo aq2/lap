@@ -1,9 +1,12 @@
-<?php   // admin buttons, view and controller!)
+<?php    ## admin_buttons.php => view and controller!
   require_once('db_functions.php');
   $tables = getTableNames();
 ?>
 
 
+<!-------------------------------------------
+    insert HTML 'view' here
+-------------------------------------------->
 <div id='adminBtnsDiv'>
   <div id='showBtnsDiv'>
     <?php     # show button for each table
@@ -17,35 +20,28 @@
   </div>
 </div>
 
-<script>
+
+<!-------------------------------------------
+    insert javascripts here
+-------------------------------------------->
+  <script src='/js/functions.js'></script>
+
+  <script>
+  bling()  // so we can use $ selector in main
   main()
 
+  // addEventListeners to the buttons
   function main() {
-    // setClickHandler('#initBtn', 'init_db.php', '#showDiv')
-
-    $('#initBtn').click( function() {
-      $(location).attr('href', '/admin/init_db_view.php');
+    $('#initBtn').on('click', function(ev) {
+      location.replace('/admin/init_db_view.php')
     })
 
-    // add click handlers to showBtns
-    $('.showBtn').click( function() {
-      $(location).attr('href', '/admin/table_view.php?tableName=' + this.id);
+    $('.showBtn').on('click', function() {
+      location.replace('/admin/table_view.php?tableName=' + this.id)
     })
   }
+  // end main()
 
-  // TODO this function only called once!
-  // when button clicked, load url into div
-  function setClickHandler(button, url, div) {
-    $(button).click( () => {
-      $(div).load('/php/' + url)
-    })
-  }
 
-  // $('.showBtn').click( ()=> {
-  //   // $.post('/php/table_view.php', { tableName: this.id })
-  //   $.post('/php/table_view.php', { tableName: this.id }, (data) => {})
-  // })
-
-  // alert('jungle')
 
 </script>

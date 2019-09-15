@@ -2,7 +2,6 @@
 <html>
 <head>
   <link rel='stylesheet', href='/main.min.css'>
-  <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
 </head>
 
 <body>
@@ -14,93 +13,15 @@ require_once('table_controller.php');
 require_once('db_functions.php');
 
 
-ob_start();
 
-?>
-
-<h1> <?= $table ?> </h1>
-
-<!-- can't put form in table -->
-<form action='/admin/table_controller.php' method='GET' id='add'>
-
-<table class='show' id=<?= $table ?>>
-  <?php
-    foreach ($col_widths as $width) {
-      echo "<col style='width:{$width}%'>";
-    }
-  ?>
-  <thead>
-    <tr>
-      <?php
-        foreach ($cols as $col) {
-          echo "<th>{$col}</th>";
-        }
-      ?>
-      <th>action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-      $j = 1;   # refers to row number, not necess the id
-      $id = 'nope';
-      foreach ($rows as $row) {
-        $i = 0;
-        echo "<tr>";
-        foreach ($row as $datum) {
-          $tag = 'td';
-          if ($i == 0) {  # id column
-            $tag = 'th';
-            $id = $datum;
-          }
-          echo "<{$tag} id='r{$j}c{$i}'>{$datum}</{$tag}>";
-          $i++;   # move onto next cell
-        }
-        echo "<th>";
-        echo "<button id='del{$id}' class='del' form='no'>delete</button>";
-        echo "<button id='moar{$id}' class='moar' form='no'>moar</button>";
-        echo "</th></tr>";
-        $j++;   # move on to next row
-      }
-
-      // now we need the input boxes for adding new record
-      echo "<tr class='input'>";
-      echo "<th>{$j}</th>";
-
-      $num_cols = count($cols);
-      for ($c=1; $c<$num_cols; $c++) {
-        if (isset($specialNumbers) && in_array($c, $specialNumbers)) {
-          $html = array_shift($selects);
-          echo "<td id='new{$c}'>{$html}</td>";
-        } else {
-          echo "<th><input id='new{$c}' type='text' name={$cols[$c]}
-                form='add' required placeholder='add new...'></th>";
-        }
-      }
-    ?>
-
-      <th>
-        <input type='hidden' form='add' name='table' value=<?= $table ?>>
-        <input type='hidden' form='add' name='action' value='add'>
-        <input type='reset' form='add' value='cancel'>
-        <input type='submit' form='add' value='add'>
-      </th>
-    </tr>
-  </tbody>
-</table>
-</form>
-
-<?php
-$myhtml = ob_get_clean();
-
-showIt($myhtml);
-
-function showIt($html) {
-  echo $html;
+if (isset($_GET['tableName'])) {
+  $tableName = $_GET['tableName'];
+  showTable($tableName);
 }
 
 
-function showTable() {
-  $table = $_GET['tableName'];
+function showTable($table) {
+  // $table = $_GET['tableName'];
   switch ($table) {
     case 'studios':
       $sql = "SELECT * FROM studios";
@@ -124,9 +45,92 @@ function showTable() {
     // $rows = injectSelect($rows, $cols, $specialColumns)[0];
     $selects = injectSelect($rows, $cols, $specialColumns)[1];
   }
+
+  // start html buffer
+  ob_start();
+  ?>
+
+  <h1> <?= $table ?> </h1>
+
+  <!-- can't put form in table -->
+  <form action='/admin/table_controller.php' method='GET' id='add'>
+
+  <table class='show' id=<?= $table ?>>
+    <?php
+      foreach ($col_widths as $width) {
+        echo "<col style='width:{$width}%'>";
+      }
+    ?>
+    <thead>
+      <tr>
+        <?php
+          foreach ($cols as $col) {
+            echo "<th>{$col}</th>";
+          }
+        ?>
+        <th>action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+        $j = 1;   # refers to row number, not necess the id
+        $id = 'nope';
+        foreach ($rows as $row) {
+          $i = 0;
+          echo "<tr>";
+          foreach ($row as $datum) {
+            $tag = 'td';
+            if ($i == 0) {  # id column
+              $tag = 'th';
+              $id = $datum;
+            }
+            echo "<{$tag} id='r{$j}c{$i}'>{$datum}</{$tag}>";
+            $i++;   # move onto next cell
+          }
+          echo "<th>";
+          echo "<button id='del{$id}' class='del' form='no'>delete</button>";
+          echo "<button id='moar{$id}' class='moar' form='no'>moar</button>";
+          echo "</th></tr>";
+          $j++;   # move on to next row
+        }
+
+        // now we need the input boxes for adding new record
+        echo "<tr class='input'>";
+        echo "<th>{$j}</th>";
+
+        $num_cols = count($cols);
+        for ($c=1; $c<$num_cols; $c++) {
+          if (isset($specialNumbers) && in_array($c, $specialNumbers)) {
+            $html = array_shift($selects);
+            echo "<td id='new{$c}'>{$html}</td>";
+          } else {
+            echo "<th><input id='new{$c}' type='text' name={$cols[$c]}
+                  form='add' required placeholder='add new...'></th>";
+          }
+        }
+      ?>
+
+        <th>
+          <input type='hidden' form='add' name='table' value=<?= $table ?>>
+          <input type='hidden' form='add' name='action' value='add'>
+          <input type='reset' form='add' value='cancel'>
+          <input type='submit' form='add' value='add'>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+  </form>
+
+  <?php
+
+  // end html buffer and echo it out
+  $myhtml = ob_get_clean();
+  echo $myhtml;
 }
 
+
 // foreach special, build select string, then inject into rows[x]
+// TODO check out js replace() function!
 // TODO a bit of a mess?
 // TODO DON'T INJECT! - only into last row, or onclick
 function injectSelect($rows, $cols, $specialColumns) {
