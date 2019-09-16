@@ -171,7 +171,9 @@ function makeSelectString($options, $field) {
 <!-------------------------------------------
     insert javascripts here
 -------------------------------------------->
+<script src='/js/functions.js'></script>
 <script>
+  bling()
   assignClickHandlers()
 
   function assignClickHandlers() {
@@ -179,7 +181,7 @@ function makeSelectString($options, $field) {
     const cont_url = '/admin/table_controller.php'
 
     // cells
-    $('td').click( function() {
+    $('td').on('click', function() {
       // change style -> change to input or editable div?
       // is it a special? -> change to select
       // another click handler for enter keypress?
@@ -190,18 +192,27 @@ function makeSelectString($options, $field) {
 
 
     // delete
-    $('.del').click( function() {
-      table =  $('.show').attr('id')
-      $.get(cont_url, { action: 'delete',
-                         id: this.id,
-                         table: table },
-        function(data) { console.log(data)
-                         $.post('/php/table_controller.php?tableName=' + table)
-                       }
-    )})
+    $('.del').on('click', function() {
+      table =  $('table')[0].getAttribute('id')       // get the first (only) table
+
+      // build param string?
+      var params = 'action=delete&id=' + this.id + '&table=' + this.table
+      // setup ajax
+      var xhr = new XMLHttpRequest()
+      xhr.open("POST", 'table_controller.php', true)
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function() {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+          // Request finished. Do processing here.
+          // do something with response - reshow table?
+        }
+      }
+      // post
+      xhr.send(params);
+    })
 
     // moar
-    $('.moar').click( function() {
+    $('.moar').on('click', function() {
       $.get(cont_url, { action: 'moar',
                          id: this.id },
         function(data) {console.log(data)})

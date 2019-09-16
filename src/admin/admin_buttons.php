@@ -23,6 +23,7 @@
 
 <!-------------------------------------------
     insert javascripts here
+    this is the 'controller' for the button 'view'. model is button->url relationship
 -------------------------------------------->
   <script src='/js/functions.js'></script>
 

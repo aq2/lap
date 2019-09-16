@@ -33,3 +33,17 @@ function bling() {
   NodeList.prototype.on = NodeList.prototype.addEventListener = function (name, fn)
     {this.forEach(function (elem, i) {elem.on(name, fn)})}
 }
+
+
+function aqax(url, paramString) {
+  var xhr = new XMLHttpRequest()
+  xhr.open("POST", url, true)
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+  xhr.onreadystatechange = function() {
+    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        // Request finished. Do processing here.
+    }
+  }
+  xhr.send(paramString);
+}
