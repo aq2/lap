@@ -5,14 +5,10 @@
 </head>
 <body>
 
-<!-----------------------------------------------
-    wee bit of php: get table names for buttons
------------------------------------------------->
-<?php
+<?php    ## admin.php => view and controller!
   require_once('db_functions.php');
   $tables = getTableNames();
 ?>
-
 
 
 <!-------------------------------------------
@@ -28,8 +24,8 @@
   </div>
   <div id='initBtnDiv'>
     <button id='initBtn'>init database</button>
-    <button id='initBtr'>spacer spacer</button>
-    <button id='initBtt'>spacer spacer</button>
+    <button id='initBtr'>inir database</button>
+    <button id='initBtt'>inir database</button>
   </div>
 </div>
 
@@ -42,7 +38,6 @@
 </div>
 
 
-
 <!-------------------------------------------
     insert javscript 'controller' here
 -------------------------------------------->
@@ -53,26 +48,35 @@
 
 // addEventListeners to the buttons
 function main() {
-  $('#initBtn').on('click',
-    url2Div('/admin/init_db_view.html', 'showDiv')
-  )
+  // need to use callHack trick to send arguments
+  // document.getElementById('initBtn')
+  $('#initBtn')
+    .addEventListener('click', callHack('/admin/init_db_view.html', 'showDiv'))
 
-  $('.showBtn')
-    .on('click',
-      url2Div('/admin/view.matrix.html?' + this.id, 'showDiv')
-    // now call a function somewhere to add clicknadlers??
-  )
-}
+  $('.showBtn').on('click', function() {
+    loadDoc2('/admin/table_view.php?' + this.id, 'showDiv')
+  })
+}    // end main()
 
 
-// need to use callback wrap in a function trick to use arguments
-function url2Div(url, div) {
+
+// need to use callHack trick to send arguments
+function callHack(url, div) {
   return function() {
-    fetch(url)
-      .then(response => response.text())
-      .then(html => {document.getElementById(div).innerHTML = html})
-      .catch(err => console.log(err))
+    url2Div(url, div)
+    // loadDoc(url, div)
   }
 }
 
+
+function url2Div(url, div) {
+  fetch(url)
+    .then(response => response.text())
+    .then(html => {document.getElementById(div).innerHTML = html})
+    .catch(err => console.log(err))
+}
+
+
+
 </script>
+

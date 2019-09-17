@@ -87,6 +87,14 @@ function phps() {
 exports.phps = phps
 
 
+function adminHtml() {
+  return gulp.src('./src/admin/**/*.html')
+             .pipe(customPlumber('html'))
+             .pipe(gulp.dest('www/admin'))
+}
+exports.adminHtml = adminHtml
+
+
 function adminPhps() {
   return gulp.src('./src/admin/**/*.php')
              .pipe(customPlumber('php'))
@@ -130,6 +138,7 @@ function watchFiles() {
   gulp.watch('./src/js/**/*.js', gulp.series(js, reloadBrowser))
   gulp.watch('./src/php/**/*.php', gulp.series(phps, reloadBrowser))
   gulp.watch('./src/admin/**/*.php', gulp.series(adminPhps, reloadBrowser))
+  gulp.watch('./src/admin/**/*.html', gulp.series(adminHtml, reloadBrowser))
 
   gulp.watch('./src/index.pug', gulp.series(index, reloadBrowser))
   gulp.watch('./src/pages/**/*.pug', gulp.series(pages, reloadBrowser))
@@ -145,7 +154,7 @@ exports.watchFiles = watchFiles
 const build = gulp.series(
   nuke,
   includes,
-  gulp.parallel(index, pages, js, phps, images, styles, adminPhps),
+  gulp.parallel(index, pages, js, phps, images, styles, adminPhps, adminHtml),
   gza
 )
 exports.build = build

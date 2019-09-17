@@ -1,17 +1,38 @@
-function loadDoc(url, el, confirmMsg) {
-  // load url into DOM element, ask for confirmation if confirmMsg
-  // el is div name without #
-  if (!confirmMsg || confirm(confirmMsg)) {
-    var xhttp = new XMLHttpRequest()
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        document.getElementById(el).innerHTML = this.responseText
-      }
+// function loadDoc(url, el, confirmMsg) {
+//   // load url into DOM element, ask for confirmation if confirmMsg
+//   // el is div name without #
+//   if (!confirmMsg || confirm(confirmMsg)) {
+//     var xhttp = new XMLHttpRequest()
+//     xhttp.onreadystatechange = function() {
+//       if (this.readyState == 4 && this.status == 200) {
+//         document.getElementById(el).innerHTML = this.responseText
+//       }
+//     }
+//     xhttp.open('GET', url, true)
+//     xhttp.send()
+//   }
+// }
+
+
+// load url into DOM element
+function loadDoc(url, div) {
+  var xhr = new XMLHttpRequest()
+  xhr.open('GET', url, true)
+  xhr.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById(div).innerHTML = this.responseText
     }
-    xhttp.open('GET', url, true)
-    xhttp.send()
   }
+  xhr.send(null)
+
+  // fetch(url)
+  // .then((res) => {
+  // alert(res)
+  // res.text()
+  // })
+  // .then((data) => {console.log(data)})
 }
+
 
 function showMessage(msg) {
   var msgDiv = document.getElementById('messages')

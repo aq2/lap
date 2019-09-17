@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<!-- 
+  <!DOCTYPE html>
 <html>
 <head>
   <link rel='stylesheet', href='/main.min.css'>
@@ -6,26 +7,29 @@
 
 <body>
 
-<?php
-  require_once('admin_buttons.php');
-?>
+-->
 
 <h1>warning</h1>
 <p>this will wipe the current database</p>
-<button id='initBtn'> initialize database </button>
+<button id='initDbBtn'> initialize database </button>
 
 <div id='output'> </div>
 
 
-<script src='/js/functions.js'></script>
+// <script src='/js/functions.js'></script>
 <script>
   // enable $ selector
   bling()
 
-  $('#initBtn').on('click', loadPHP)
+    alert('main')
+//  $('#initDbBtn').on('click', loadPHP)
+
+  document.getElementById('initDbBtn').addEventListener('click', loadPHP)
+
 
   // load php into #output div
   function loadPHP() {
+    alert('load')
     loadDoc('init_db.php', 'output')
   }
 </script>
