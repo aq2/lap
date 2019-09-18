@@ -56,13 +56,12 @@
 // addEventListeners to the buttons
 function main() {
   $('#initBtn').on('click',
-     obi('/admin/init_db_view.html')
+    url2Div('/admin/init_db_view.html', 'showDiv')
   )
-    // url2Div('/admin/init_db_view.html', 'showDiv')
 
   $('.showBtn')
     .on('click',
-      obi('/admin/view.matrix.html?' + this.id))
+      obi)
       // hopeless)
       // url2Body('/admin/view.matrix.html?' + this.id, 'showDiv')
       // url2Div('/admin/view.matrix.html?' + this.id, 'showDiv')
@@ -94,23 +93,13 @@ function url2Body(url, div) {
 
 
 // works for 'injecting' external url and scripts!
-function obi(url) {
-  return function() {
-  var $obj = document.getElementById('myframe')
-  $obj.data = url
-  document.getElementById('showDiv').innerHTML = $obj.outerHTML
-  // $obj.outerHTML = $obj.outerHTML;
-}
-}
-
-// works for 'injecting' external url and scripts!
-function obiY() {
+function obi() {
   var $obj = document.getElementById('myframe')
   $obj.data = '/admin/view.matrix.html'
   // $obj.outerHTML = $obj.outerHTML;
   document.getElementById('showDiv').innerHTML = $obj.outerHTML
-}
 
+}
 
 function obi1() {
   var div = document.getElementById('showDiv')

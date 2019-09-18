@@ -1,10 +1,5 @@
-<h1> welcome to da <i>real</i> matrix </h1>
-
-
-<script>
   alert('ffs')
   // get params
   var urlParams = new URLSearchParams(window.location.search);
   console.log(urlParams)
 
-</script>
