@@ -1,6 +1,5 @@
 const del = require('del'),
       gulp = require('gulp'),
-      pug  = require('gulp-pug'),
       rename = require('gulp-rename'),
       stylus = require('gulp-stylus'),
       notify = require('gulp-notify'),    // apt install libnotify-bin
@@ -8,6 +7,7 @@ const del = require('del'),
       exec = require('child_process').exec,
       browsersync = require('browser-sync'),
       sourcemaps = require('gulp-sourcemaps')
+      // pug  = require('gulp-pug'),
 
 
 function customPlumber(errTitle) {
@@ -28,37 +28,37 @@ function gza() {
 exports.gza = gza
 
 
-function images() {
-  return gulp.src('src/images/**/*.*')
-             .pipe(gulp.dest('www/images'))
-}
-exports.images = images
+// function images() {
+//   return gulp.src('src/images/**/*.*')
+//              .pipe(gulp.dest('www/images'))
+// }
+// exports.images = images
 
 
-function includes() {
-  return gulp.src('src/includes/**/*.pug')
-            .pipe(customPlumber('includes'))
-            .pipe(pug())
-}
-exports.includes = includes
+// function includes() {
+//   return gulp.src('src/includes/**/*.pug')
+//             .pipe(customPlumber('includes'))
+//             .pipe(pug())
+// }
+// exports.includes = includes
 
 
-function index() {
-  return gulp.src('src/index.pug')
-             .pipe(pug())
-             .pipe(customPlumber('index'))
-             .pipe(rename({ extname: '.php' }))
-             .pipe(gulp.dest('www'))
-}
-exports.index = index
+// function index() {
+//   return gulp.src('src/index.pug')
+//              .pipe(pug())
+//              .pipe(customPlumber('index'))
+//              .pipe(rename({ extname: '.php' }))
+//              .pipe(gulp.dest('www'))
+// }
+// exports.index = index
 
 
-function js() {
-  return gulp.src('src/js/**/*.js')
-             .pipe(customPlumber('javascript'))
-             .pipe(gulp.dest('www/js'))
-}
-exports.js = js
+// function js() {
+//   return gulp.src('src/js/**/*.js')
+//              .pipe(customPlumber('javascript'))
+//              .pipe(gulp.dest('www/js'))
+// }
+// exports.js = js
 
 
 function nuke() {
@@ -70,22 +70,21 @@ function nuke() {
 exports.nuke = nuke
 
 
-function pages() {
-  return gulp.src('src/pages/**/*.pug')
-             .pipe(customPlumber('pages'))
-             .pipe(pug())
-             .pipe(gulp.dest('www/pages'))
-}
-exports.pages = pages
+// function pages() {
+//   return gulp.src('src/pages/**/*.pug')
+//              .pipe(customPlumber('pages'))
+//              .pipe(pug())
+//              .pipe(gulp.dest('www/pages'))
+// }
+// exports.pages = pages
 
 
-function phps() {
-  return gulp.src('./src/php/**/*.php')
-             .pipe(customPlumber('php'))
-             .pipe(gulp.dest('www/php'))
-}
-exports.phps = phps
-
+// function phps() {
+//   return gulp.src('./src/php/**/*.php')
+//              .pipe(customPlumber('php'))
+//              .pipe(gulp.dest('www/php'))
+// }
+// exports.phps = phps
 
 
 function adminStuff() {
@@ -93,21 +92,6 @@ function adminStuff() {
              .pipe(gulp.dest('www/admin'))
 }
 exports.adminStuff = adminStuff
-
-// function adminHtml() {
-//   return gulp.src('./src/admin/**/*.html')
-//              .pipe(customPlumber('html'))
-//              .pipe(gulp.dest('www/admin'))
-// }
-// exports.adminHtml = adminHtml
-
-
-// function adminPhps() {
-//   return gulp.src('./src/admin/**/*.php')
-//              .pipe(customPlumber('php'))
-//              .pipe(gulp.dest('www/admin'))
-// }
-// exports.adminPhps = adminPhps
 
 
 function styles() {
@@ -142,14 +126,14 @@ exports.reloadBrowser = reloadBrowser
 function watchFiles() {
   // gulp.watch('./src/images/**/*.*', images)
   gulp.watch('./src/stylus/**/*.styl', styles)
-  gulp.watch('./src/js/**/*.js', gulp.series(js, reloadBrowser))
-  gulp.watch('./src/php/**/*.php', gulp.series(phps, reloadBrowser))
-  // gulp.watch('./src/admin/**/*.php', gulp.series(adminPhps, reloadBrowser))
+  // gulp.watch('./src/js/**/*.js', gulp.series(js, reloadBrowser))
+  // gulp.watch('./src/php/**/*.php', gulp.series(phps, reloadBrowser))
   gulp.watch('./src/admin/**/*.*', gulp.series(adminStuff, reloadBrowser))
+  // gulp.watch('./src/admin/**/*.php', gulp.series(adminPhps, reloadBrowser))
 
-  gulp.watch('./src/index.pug', gulp.series(index, reloadBrowser))
-  gulp.watch('./src/pages/**/*.pug', gulp.series(pages, reloadBrowser))
-  gulp.watch('./src/includes/**/*.pug', gulp.series(includes, gulp.parallel(pages, index), reloadBrowser))
+  // gulp.watch('./src/index.pug', gulp.series(index, reloadBrowser))
+  // gulp.watch('./src/pages/**/*.pug', gulp.series(pages, reloadBrowser))
+  // gulp.watch('./src/includes/**/*.pug', gulp.series(includes, gulp.parallel(pages, index), reloadBrowser))
 
   exec('espeak -ven+f5 watching')
   gulp.src('./src/index.*').pipe(notify('👓 Gulp up, running and watching 👓'))
@@ -160,8 +144,9 @@ exports.watchFiles = watchFiles
 // define complex multi-tasks
 const build = gulp.series(
   nuke,
-  includes,
-  gulp.parallel(index, pages, js, phps, images, styles, adminStuff),
+  // includes,
+  gulp.parallel(styles, adminStuff),
+  // gulp.parallel(index, pages, js, phps, images, styles, adminStuff),
   gza
 )
 exports.build = build
